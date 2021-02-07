@@ -15,7 +15,8 @@ module.exports.loop = function () {
         }
     }
     
-    spawner.run(1, 1, 1);
+    spawner.run(2, 2, 1);
+    //harvester, upgrader, builder
 
 
     for(var name in Game.creeps) {
