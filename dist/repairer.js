@@ -49,7 +49,7 @@ var roleRepairer = {
                 }
                 creep.say('transferring');
                 creep.memory.repairing = true;
-                else if(creep.repair(targ) == ERR_NOT_IN_RANGE || (creep.store.getFreeCapacity() == 0)) {
+                if(creep.repair(targ) == ERR_NOT_IN_RANGE || (creep.store.getFreeCapacity() == 0)) {
                     creep.moveTo(targ, {visualizePathStyle: {stroke: '#0fffff'}});
                 }
             }
