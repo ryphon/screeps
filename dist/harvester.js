@@ -14,7 +14,6 @@ var roleHarvester = {
             var targets = creep.room.find(FIND_STRUCTURES, {
                     filter: (structure) => {
                         return (structure.structureType == STRUCTURE_EXTENSION ||
-                                //structure.structureType == STRUCTURE_CONTAINER ||
                                 structure.structureType == STRUCTURE_SPAWN ||
                                 structure.structureType == STRUCTURE_TOWER) && 
                                 (structure.store.getCapacity(RESOURCE_ENERGY) - structure.store[RESOURCE_ENERGY]) >= 0;
@@ -35,7 +34,7 @@ var roleHarvester = {
                     }
                 }
                 if (targ == undefined) {
-                    targ = creep.room.find(FIND_STRUCTURES, filter: (structure) => structure.structureType == STRUCTURE_CONTAINER)[0]
+                    targ = creep.room.find(FIND_STRUCTURES, {filter: (structure) => {structure.structureType == STRUCTURE_CONTAINER;}})[0];
                 }
                 try {
                     message = 'h>' + targ.id
