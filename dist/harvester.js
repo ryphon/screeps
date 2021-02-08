@@ -1,11 +1,5 @@
 var roleHarvester = {
 
-    freeCap: function(structure){
-        var used = structure.store[RESOURCE_ENERGY]
-        var cap = structure.store.getCapacity(RESOURCE_ENERGY)
-        return cap - used;
-    }
-
     /** @param {Creep} creep **/
     run: function(creep) {
 	    if(creep.store.getFreeCapacity() > 0) {
