@@ -8,17 +8,17 @@ var spawner = {
 
         if(harvesters.length < harvesterCount) {
             var newName = 'Harvester' + Game.time;
-            Game.spawns['Spawn1'].spawnCreep([WORK,CARRY,CARRY,MOVE,MOVE], newName, 
+            Game.spawns['Spawn1'].spawnCreep([WORK,CARRY,MOVE,MOVE], newName, 
                 {memory: {role: 'harvester'}});
         }
         if(upgraders.length < upgraderCount) {
             var newName = 'Upgrader' + Game.time;
-            Game.spawns['Spawn1'].spawnCreep([WORK,CARRY,MOVE], newName, 
+            Game.spawns['Spawn1'].spawnCreep([WORK,WORK,CARRY,MOVE], newName, 
                 {memory: {role: 'upgrader'}});
         }
         if(builders.length < builderCount) {
             var newName = 'Builder' + Game.time;
-            Game.spawns['Spawn1'].spawnCreep([WORK,CARRY,CARRY,MOVE,MOVE], newName, 
+            Game.spawns['Spawn1'].spawnCreep([WORK,CARRY,MOVE,MOVE], newName, 
                 {memory: {role: 'builder'}});
         }
     
