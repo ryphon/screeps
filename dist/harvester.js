@@ -35,7 +35,9 @@ var roleHarvester = {
                         cur = used / cap;
                     }
                 }
-                creep.say('transferring');
+                message = '>' + targ.id
+                creep.say(message)
+                //creep.say('transferring');
                 if(creep.transfer(targ, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE || (creep.store.getFreeCapacity() == 0)) {
                     creep.moveTo(targ, {visualizePathStyle: {stroke: '#ffffff'}});
                 }
