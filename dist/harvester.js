@@ -1,5 +1,11 @@
 var roleHarvester = {
 
+    freeCap: function(structure){
+        var used = structure.store[RESOURCE_ENERGY]
+        var cap = structure.store.getCapacity(RESOURCE_ENERGY)
+        return cap - used;
+    }
+
     /** @param {Creep} creep **/
     run: function(creep) {
 	    if(creep.store.getFreeCapacity() > 0) {
@@ -21,20 +27,25 @@ var roleHarvester = {
                     }
             });
             if(targets.length > 0) {
-                //var cur = 0;
-                //var targ;
-                //for(var tar in targets) {
-                //    if (targets[tar].store.getFreeCapacity() > cur) {
-                //        targ = targets[tar];
-                //        cur = targ.store.getFreeCapacity();
-                //    }
-                //}
-                if (targets[0].store.getFreeCapacity() == 0) {
+                var cur = 100;
+                var targ;
+                for(var tar in targets) {
+                    var used = targets[tar].store[RESOURCE_ENERGY]
+                    var cap = targets[tar].store.getCapacity(RESOURCE_ENERGY)
+                    var percent = used / cap;
+                    if (percent < cur) {
+                        targ = targets[tar];
+                        var used = targ.store[RESOURCE_ENERGY]
+                        var cap = targ.store.getCapacity(RESOURCE_ENERGY)
+                        cur = usedTarg / capTarg;
+                    }
+                }
+                if ((used - cap) == 0) {
                     creep.say('waiting');
                     creep.moveTo(Game.flags.Flag2, {visualizePathStyle: {stroke: '#ffffff'}});
                 }
-                else if(creep.transfer(targets[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE || (creep.store.getFreeCapacity() == 0)) {
-                    creep.moveTo(targets[0], {visualizePathStyle: {stroke: '#ffffff'}});
+                else if(creep.transfer(targ, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE || (creep.store.getFreeCapacity() == 0)) {
+                    creep.moveTo(targ, {visualizePathStyle: {stroke: '#ffffff'}});
                 }
             }
         }
