@@ -2,7 +2,7 @@ var roleHarvester = {
 
     /** @param {Creep} creep **/
     run: function(creep) {
-	    if(creep.store.getFreeCapacity() > 0) {
+	    if(creep.store.getFreeCapacity() > 40) {
             var sources = creep.room.find(FIND_SOURCES);
             if(creep.harvest(sources[1]) == ERR_NOT_IN_RANGE) {
                 creep.moveTo(sources[1], {visualizePathStyle: {stroke: '#ffaa00'}});
@@ -16,8 +16,8 @@ var roleHarvester = {
                         return (structure.structureType == STRUCTURE_EXTENSION ||
                                 structure.structureType == STRUCTURE_CONTAINER ||
                                 structure.structureType == STRUCTURE_SPAWN ||
-                                structure.structureType == STRUCTURE_TOWER) //&& 
-                                //(structure.store.getCapacity(RESOURCE_ENERGY) - structure.store[RESOURCE_ENERGY]) >= 0;
+                                structure.structureType == STRUCTURE_TOWER) && 
+                                (structure.store.getCapacity(RESOURCE_ENERGY) - structure.store[RESOURCE_ENERGY]) >= 0;
                     }
             });
             if(targets.length > 0) {
@@ -26,12 +26,12 @@ var roleHarvester = {
                 for(var tar in targets) {
                     var used = targets[tar].store[RESOURCE_ENERGY];
                     var cap = targets[tar].store.getCapacity(RESOURCE_ENERGY);
-                    var percent = used / cap;
-                    if (percent > cur) {
+                    var free = used - cap;
+                    if (free > cur) {
                         targ = targets[tar];
                         var used = targ.store[RESOURCE_ENERGY];
                         var cap = targ.store.getCapacity(RESOURCE_ENERGY);
-                        cur = used / cap;
+                        cur = used - cap;
                     }
                 }
                 creep.say('transferring');
