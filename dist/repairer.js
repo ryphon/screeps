@@ -47,7 +47,12 @@ var roleRepairer = {
                         }
                     }
                 }
-                creep.say('transferring');
+                try {
+                    message = 'r>' + targ.id
+                } catch(err) {
+                    message = 'r>BADID'
+                }
+                creep.say(message);
                 creep.memory.repairing = true;
                 if(creep.repair(targ) == ERR_NOT_IN_RANGE || (creep.store.getFreeCapacity() == 0)) {
                     creep.moveTo(targ, {visualizePathStyle: {stroke: '#0fffff'}});

@@ -34,7 +34,11 @@ var roleHarvester = {
                         cur = used / cap;
                     }
                 }
-                message = 'h>';
+                try {
+                    message = 'h>' + targ.id
+                } catch(err) {
+                    message = 'h>BADID'
+                }
                 creep.say(message);
                 creep.memory.harvesting = false;
                 if(creep.transfer(targ, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE || (creep.store.getFreeCapacity() == 0)) {

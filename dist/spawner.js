@@ -20,17 +20,17 @@ var spawner = {
         if(upgraderSpawn && !harvesterSpawn) {
             var newName = 'Upgrader' + Game.time;
             Game.spawns['Spawn1'].spawnCreep([WORK,WORK,CARRY,MOVE], newName, 
-                {memory: {role: 'upgrader'}});
+                {memory: {role: 'upgrader', upgrading: false}});
         }
         if(builderSpawn && !upgraderSpawn && !harvesterSpawn) {
             var newName = 'Builder' + Game.time;
             Game.spawns['Spawn1'].spawnCreep([WORK,CARRY,MOVE,MOVE], newName, 
-                {memory: {role: 'builder'}});
+                {memory: {role: 'builder', building: false}});
         }
         if(repairerSpawn && !builderSpawn && !upgraderSpawn && !harvesterSpawn) {
             var newName = 'Repairer' + Game.time;
             Game.spawns['Spawn1'].spawnCreep([WORK,CARRY,MOVE,MOVE], newName, 
-                {memory: {role: 'repairer'}});
+                {memory: {role: 'repairer', repairing: false}});
         }
     
     
