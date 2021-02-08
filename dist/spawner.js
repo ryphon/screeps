@@ -4,7 +4,7 @@ var spawner = {
         var harvesters = _.filter(Game.creeps, (creep) => creep.memory.role == 'harvester');
         var upgraders = _.filter(Game.creeps, (creep) => creep.memory.role == 'upgrader');
         var builders = _.filter(Game.creeps, (creep) => creep.memory.role == 'builder');
-        var builders = _.filter(Game.creeps, (creep) => creep.memory.role == 'repairer');
+        var repairers = _.filter(Game.creeps, (creep) => creep.memory.role == 'repairer');
 
         var harvesterSpawn = harvesters.length < harvesterCount;
         var upgraderSpawn = upgraders.length < upgraderCount;
