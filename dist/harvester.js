@@ -22,12 +22,22 @@ var roleHarvester = {
             });
             if(targets.length > 0) {
                 console.log(creep.store.getFreeCapacity());
-                if (targets[0].store.getFreeCapacity() == 0) {
+                var cur = 0;
+                var targ;
+                for(var tar in targets) {
+                    console.log(tar)
+                    console.log(targets[tar])
+                    if (targets[tar].store.getFreeCapacity() > cur) {
+                        targ = targets[tar];
+                        cur = tar.store.getFreeCapacity();
+                    }
+                }
+                if (targ.store.getFreeCapacity() == 0) {
                     creep.say('waiting');
                     creep.moveTo(Game.flags.Flag2, {visualizePathStyle: {stroke: '#ffffff'}});
                 }
-                else if(creep.transfer(targets[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE || (creep.store.getFreeCapacity() == 0)) {
-                    creep.moveTo(targets[0], {visualizePathStyle: {stroke: '#ffffff'}});
+                else if(creep.transfer(targ, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE || (creep.store.getFreeCapacity() == 0)) {
+                    creep.moveTo(targ, {visualizePathStyle: {stroke: '#ffffff'}});
                 }
             }
         }
