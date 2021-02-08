@@ -2,7 +2,7 @@ var roleRepairer = {
 
     /** @param {Creep} creep **/
     run: function(creep) {
-        if(creep.store.getFreeCapacity() > 40) {
+        if(creep.store.getFreeCapacity() > 10) {
             var sources = creep.room.find(FIND_SOURCES);
             if(creep.harvest(sources[1]) == ERR_NOT_IN_RANGE) {
                 creep.moveTo(sources[1], {visualizePathStyle: {stroke: '#ffaa00'}});
