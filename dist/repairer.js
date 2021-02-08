@@ -9,7 +9,7 @@ var roleRepairer = {
         //        creep.say('🔄 harvest');
         //    }
         //}
-	    if(creep.store.getFreeCapacity > 0 && creep.memory.repairing == false) {
+	    if(creep.store.getFreeCapacity() > 0 && creep.memory.repairing == false) {
             var container = creep.room.find(FIND_STRUCTURES, {
                 filter: (structure) => {
                     return (structure.structureType == STRUCTURE_CONTAINER)
