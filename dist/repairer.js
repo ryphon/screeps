@@ -27,15 +27,25 @@ var roleRepairer = {
             if(targets.length > 0) {
                 var cur = 100;
                 var targ;
+                var curTicks = 9999;
+                var ticks;
                 for(var tar in targets) {
                     var hp = targets[tar].hits;
                     var max = targets[tar].hitsMax;
                     var percent = hp / max;
-                    if (percent < cur) {
+                    ticks = targets[tar].ticksToDecay
+                    if (percent < cur || ticks < curTicks) {
+                        curTicks = ticks
                         targ = targets[tar];
                         hp = targ.hits;
                         max = targ.hitsMax;
                         cur = hp / max;
+                        if (ticks < 1000) {
+                            if(creep.repair(targ) == ERR_NOT_IN_RANGE) {
+                                creep.moveTo(targ, {visualizePathStyle: {stroke: '#0fffff'}});
+                                creep.repair(targ);
+                            }
+                        }
                     }
                 }
                 creep.say('transferring');
