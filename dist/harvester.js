@@ -21,7 +21,7 @@ var roleHarvester = {
                     }
             });
             if(targets.length > 0) {
-                var cur = 100;
+                var cur = 1;
                 var targ;
                 for(var tar in targets) {
                     targ = targets[tar]
