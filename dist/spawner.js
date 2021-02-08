@@ -15,7 +15,7 @@ var spawner = {
         if(harvesterSpawn) {
             var newName = 'Harvester' + Game.time;
             var harvesterArray;
-            if(Game.room.energyAvailable >= 500) {
+            if(Game.rooms['W48S31'].energyAvailable >= 500) {
                 harvesterArray = [WORK, WORK, CARRY, CARRY, MOVE, MOVE]
             } else {
                 harvesterArray = [WORK, CARRY, MOVE, MOVE]
