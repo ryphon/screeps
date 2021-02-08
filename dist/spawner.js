@@ -15,7 +15,7 @@ var spawner = {
         if(harvesterSpawn) {
             var newName = 'Harvester' + Game.time;
             Game.spawns['Spawn1'].spawnCreep([WORK,CARRY,MOVE,MOVE], newName, 
-                {memory: {role: 'harvester'}});
+                {memory: {role: 'harvester', harvesting: true}});
         }
         if(upgraderSpawn && !harvesterSpawn) {
             var newName = 'Upgrader' + Game.time;
