@@ -26,7 +26,7 @@ var roleHarvester = {
                 for(var tar in targets) {
                     if (targets[tar].store.getFreeCapacity() > cur) {
                         targ = targets[tar];
-                        cur = tar.store.getFreeCapacity();
+                        cur = targ.store.getFreeCapacity();
                     }
                 }
                 if (targ.store.getFreeCapacity() == 0) {
