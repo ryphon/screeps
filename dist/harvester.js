@@ -34,17 +34,16 @@ var roleHarvester = {
                         cur = used / cap;
                     }
                 }
-                message = '>' + targ.id
-                creep.say(message)
+                message = 'h>';
+                creep.say(message);
                 creep.memory.harvesting = false;
-                //creep.say('transferring');
                 if(creep.transfer(targ, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE || (creep.store.getFreeCapacity() == 0)) {
                     creep.moveTo(targ, {visualizePathStyle: {stroke: '#ffffff'}});
                 }
             }
         }
         if (creep.memory.harvesting == false && creep.store.getCapacity() == creep.store.getFreeCapacity()) {
-            creep.memory.harvesting = true
+            creep.memory.harvesting = true;
         }
 	}
 };
