@@ -34,7 +34,7 @@ var roleHarvester = {
                     }
                 }
                 if (targ == undefined) {
-                    targ = creep.room.find(FIND_STRUCTURES, {filter: (structure) => {structure.structureType == STRUCTURE_CONTAINER;}})[0];
+                    targ = creep.room.find(FIND_STRUCTURES, {filter: (structure) => {return(structure.structureType == STRUCTURE_CONTAINER);}})[0];
                 }
                 try {
                     message = 'h>' + targ.id
