@@ -2,17 +2,24 @@ var roleRepairer = {
 
     /** @param {Creep} creep **/
     run: function(creep) {
-	    if(creep.store.getUsedCapacity()/creep.store.getCapacity() < 10) {
-            var container = creep.room.find(FIND_STRUCTURES, {
-                filter: (structure) => {
-                    return (structure.structureType == STRUCTURE_CONTAINER)
-                }
-            });
-            if(creep.withdraw(container[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                creep.moveTo(container[0], {visualizePathStyle: {stroke: '#ffaa00'}});
-                creep.say('withdraw');
+        if(creep.store.getFreeCapacity() > 40) {
+            var sources = creep.room.find(FIND_SOURCES);
+            if(creep.harvest(sources[1]) == ERR_NOT_IN_RANGE) {
+                creep.moveTo(sources[1], {visualizePathStyle: {stroke: '#ffaa00'}});
+                creep.say('🔄 harvest');
             }
         }
+	    //if(creep.store.getUsedCapacity()/creep.store.getCapacity() < 10) {
+        //    var container = creep.room.find(FIND_STRUCTURES, {
+        //        filter: (structure) => {
+        //            return (structure.structureType == STRUCTURE_CONTAINER)
+        //        }
+        //    });
+        //    if(creep.withdraw(container[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+        //        creep.moveTo(container[0], {visualizePathStyle: {stroke: '#ffaa00'}});
+        //        creep.say('withdraw');
+        //    }
+        //}
         else {
             var targets = creep.room.find(FIND_STRUCTURES, {
                     filter: (structure) => structure.hits < structure.hitsMax
