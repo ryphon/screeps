@@ -16,7 +16,7 @@ module.exports.loop = function () {
         }
     }
     
-    spawner.run(2, 2, 2, 1);
+    spawner.run(2, 2, 1, 2);
     //harvester, upgrader, builder, repairer
 
 
