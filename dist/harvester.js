@@ -41,6 +41,9 @@ var roleHarvester = {
                 }
                 try {
                     message = 'h>' + targ.id
+                    if (targ.id === '6020311aad995b1ee84a403d') {
+                        message = 'h> Spawn'
+                    }
                 } catch(err) {
                     message = 'h>BADID'
                 }
