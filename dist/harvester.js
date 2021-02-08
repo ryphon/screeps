@@ -34,6 +34,9 @@ var roleHarvester = {
                         cur = used / cap;
                     }
                 }
+                if (targ == undefined) {
+                    targ = creep.room.find(FIND_STRUCTURES, filter: (structure) => structure.structureType == STRUCTURE_CONTAINER)[0]
+                }
                 try {
                     message = 'h>' + targ.id
                 } catch(err) {

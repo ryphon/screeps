@@ -59,7 +59,7 @@ var roleRepairer = {
                 }
             }
         }
-        if (creep.memory.repairing == true && creep.store.getCapacity() == creep.store.getFreeCapacity()) {
+        if (creep.memory.repairing == true && creep.store.getUsedCapacity() == 0) {
             creep.memory.repairing = false;
         }
 	}
