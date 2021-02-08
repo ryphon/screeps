@@ -24,9 +24,8 @@ var roleHarvester = {
                 var cur = 1;
                 var targ;
                 for(var tar in targets) {
-                    targ = targets[tar]
-                    var used = targ.store[RESOURCE_ENERGY];
-                    var cap = targ.store.getCapacity(RESOURCE_ENERGY);
+                    var used = target[tar].store[RESOURCE_ENERGY];
+                    var cap = target[tar].store.getCapacity(RESOURCE_ENERGY);
                     var pct = used / cap;
                     if (pct < cur) {
                         targ = targets[tar];
