@@ -24,14 +24,15 @@ var roleHarvester = {
                 var cur = 100;
                 var targ;
                 for(var tar in targets) {
-                    var used = targets[tar].store[RESOURCE_ENERGY];
-                    var cap = targets[tar].store.getCapacity(RESOURCE_ENERGY);
-                    var free = used - cap;
-                    if (free > cur) {
+                    targ = targets[tar]
+                    var used = targ.store[RESOURCE_ENERGY];
+                    var cap = targ.store.getCapacity(RESOURCE_ENERGY);
+                    var pct = used / cap;
+                    if (pct < cur) {
                         targ = targets[tar];
                         var used = targ.store[RESOURCE_ENERGY];
                         var cap = targ.store.getCapacity(RESOURCE_ENERGY);
-                        cur = used - cap;
+                        cur = used / cap;
                     }
                 }
                 creep.say('transferring');
