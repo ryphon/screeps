@@ -2,24 +2,24 @@ var roleRepairer = {
 
     /** @param {Creep} creep **/
     run: function(creep) {
-        if(creep.store.getFreeCapacity() > 10) {
-            var sources = creep.room.find(FIND_SOURCES);
-            if(creep.harvest(sources[1]) == ERR_NOT_IN_RANGE) {
-                creep.moveTo(sources[1], {visualizePathStyle: {stroke: '#ffaa00'}});
-                creep.say('🔄 harvest');
-            }
-        }
-	    //if(creep.store.getUsedCapacity()/creep.store.getCapacity() < 10) {
-        //    var container = creep.room.find(FIND_STRUCTURES, {
-        //        filter: (structure) => {
-        //            return (structure.structureType == STRUCTURE_CONTAINER)
-        //        }
-        //    });
-        //    if(creep.withdraw(container[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-        //        creep.moveTo(container[0], {visualizePathStyle: {stroke: '#ffaa00'}});
-        //        creep.say('withdraw');
+        //if(creep.store.getFreeCapacity() > 10) {
+        //    var sources = creep.room.find(FIND_SOURCES);
+        //    if(creep.harvest(sources[1]) == ERR_NOT_IN_RANGE) {
+        //        creep.moveTo(sources[1], {visualizePathStyle: {stroke: '#ffaa00'}});
+        //        creep.say('🔄 harvest');
         //    }
         //}
+	    if(creep.store.getFreeCapacity > 0 && creep.memory.repairing == false) {
+            var container = creep.room.find(FIND_STRUCTURES, {
+                filter: (structure) => {
+                    return (structure.structureType == STRUCTURE_CONTAINER)
+                }
+            });
+            if(creep.withdraw(container[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+                creep.moveTo(container[0], {visualizePathStyle: {stroke: '#ffaa00'}});
+                creep.say('withdraw');
+            }
+        }
         else {
             var targets = creep.room.find(FIND_STRUCTURES, {
                     filter: (structure) => structure.hits < structure.hitsMax
@@ -43,20 +43,19 @@ var roleRepairer = {
                         if (ticks < 200) {
                             if(creep.repair(targ) == ERR_NOT_IN_RANGE) {
                                 creep.moveTo(targ, {visualizePathStyle: {stroke: '#0fffff'}});
-                                creep.repair(targ);
                             }
                         }
                     }
                 }
                 creep.say('transferring');
-                if ((max - hp) == 0) {
-                    creep.say('waiting');
-                    creep.moveTo(Game.flags.Flag2, {visualizePathStyle: {stroke: '#ffffff'}});
-                }
-                else if(creep.repair(targ) == ERR_NOT_IN_RANGE) {
+                creep.memory.repairing = true;
+                else if(creep.repair(targ) == ERR_NOT_IN_RANGE || (creep.store.getFreeCapacity() == 0)) {
                     creep.moveTo(targ, {visualizePathStyle: {stroke: '#0fffff'}});
                 }
             }
+        }
+        if (creep.memory.repairing == true && creep.store.getCapacity() == creep.store.getFreeCapacity()) {
+            creep.memory.repairing = false;
         }
 	}
 };
