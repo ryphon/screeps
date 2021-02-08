@@ -24,16 +24,17 @@ var roleHarvester = {
                 var cur = 100;
                 var targ;
                 for(var tar in targets) {
-                    var used = targets[tar].store[RESOURCE_ENERGY]
-                    var cap = targets[tar].store.getCapacity(RESOURCE_ENERGY)
+                    var used = targets[tar].store[RESOURCE_ENERGY];
+                    var cap = targets[tar].store.getCapacity(RESOURCE_ENERGY);
                     var percent = used / cap;
                     if (percent < cur) {
                         targ = targets[tar];
-                        var used = targ.store[RESOURCE_ENERGY]
-                        var cap = targ.store.getCapacity(RESOURCE_ENERGY)
+                        var used = targ.store[RESOURCE_ENERGY];
+                        var cap = targ.store.getCapacity(RESOURCE_ENERGY);
                         cur = used / cap;
                     }
                 }
+                creep.say('transferring');
                 if ((used - cap) == 0) {
                     creep.say('waiting');
                     creep.moveTo(Game.flags.Flag2, {visualizePathStyle: {stroke: '#ffffff'}});
