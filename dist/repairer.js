@@ -36,8 +36,8 @@ var roleRepairer = {
                     creep.say('waiting');
                     creep.moveTo(Game.flags.Flag2, {visualizePathStyle: {stroke: '#ffffff'}});
                 }
-                else if(creep.repair(targets[0]) == ERR_NOT_IN_RANGE) {
-                    creep.moveTo(targets[0], {visualizePathStyle: {stroke: '#0fffff'}});
+                else if(creep.repair(targ) == ERR_NOT_IN_RANGE) {
+                    creep.moveTo(targ, {visualizePathStyle: {stroke: '#0fffff'}});
                 }
             }
         }
