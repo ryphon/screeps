@@ -1,9 +1,10 @@
 var spawner = {
-    run: function(harvesterCount, upgraderCount, builderCount) {
+    run: function(harvesterCount, upgraderCount, builderCount, repairCount) {
 
         var harvesters = _.filter(Game.creeps, (creep) => creep.memory.role == 'harvester');
         var upgraders = _.filter(Game.creeps, (creep) => creep.memory.role == 'upgrader');
         var builders = _.filter(Game.creeps, (creep) => creep.memory.role == 'builder');
+        var builders = _.filter(Game.creeps, (creep) => creep.memory.role == 'repairer');
 
 
         if(harvesters.length < harvesterCount) {
@@ -20,6 +21,11 @@ var spawner = {
             var newName = 'Builder' + Game.time;
             Game.spawns['Spawn1'].spawnCreep([WORK,CARRY,MOVE,MOVE], newName, 
                 {memory: {role: 'builder'}});
+        }
+        if(builders.length < builderCount) {
+            var newName = 'Repairer' + Game.time;
+            Game.spawns['Spawn1'].spawnCreep([WORK,CARRY,MOVE,MOVE], newName, 
+                {memory: {role: 'repairer'}});
         }
     
     
