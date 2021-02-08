@@ -9,7 +9,7 @@ var spawner = {
         var harvesterSpawn = harvesters.length < harvesterCount;
         var upgraderSpawn = upgraders.length < upgraderCount;
         var builderSpawn = builders.length < builderCount;
-        var repairerSpawn = repairers.length < repairerCount;
+        var repairerSpawn = repairers.length < repairCount;
 
 
         if(harvesterSpawn) {
