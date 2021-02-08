@@ -21,7 +21,6 @@ var roleHarvester = {
                     }
             });
             if(targets.length > 0) {
-                console.log(creep.store.getFreeCapacity());
                 var cur = 0;
                 var targ;
                 for(var tar in targets) {
@@ -31,6 +30,8 @@ var roleHarvester = {
                         cur = tar.store.getFreeCapacity();
                     }
                 }
+                console.log(targ);
+                console.log(cur);
                 if (targ.store.getFreeCapacity() == 0) {
                     creep.say('waiting');
                     creep.moveTo(Game.flags.Flag2, {visualizePathStyle: {stroke: '#ffffff'}});
