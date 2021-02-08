@@ -6,23 +6,28 @@ var spawner = {
         var builders = _.filter(Game.creeps, (creep) => creep.memory.role == 'builder');
         var builders = _.filter(Game.creeps, (creep) => creep.memory.role == 'repairer');
 
+        var harvesterSpawn = harvesters.length < harvesterCount;
+        var upgraderSpawn = upgraders.length < upgraderCount;
+        var builderSpawn = builders.length < builderCount;
+        var repairerSpawn = repairers.length < repairerCount;
 
-        if(harvesters.length < harvesterCount) {
+
+        if(harvesterSpawn) {
             var newName = 'Harvester' + Game.time;
             Game.spawns['Spawn1'].spawnCreep([WORK,CARRY,MOVE,MOVE], newName, 
                 {memory: {role: 'harvester'}});
         }
-        if(upgraders.length < upgraderCount) {
+        if(upgraderSpawn && !harvesterSpawn) {
             var newName = 'Upgrader' + Game.time;
             Game.spawns['Spawn1'].spawnCreep([WORK,WORK,CARRY,MOVE], newName, 
                 {memory: {role: 'upgrader'}});
         }
-        if(builders.length < builderCount) {
+        if(builderSpawn && !upgraderSpawn && !harvesterSpawn) {
             var newName = 'Builder' + Game.time;
             Game.spawns['Spawn1'].spawnCreep([WORK,CARRY,MOVE,MOVE], newName, 
                 {memory: {role: 'builder'}});
         }
-        if(builders.length < builderCount) {
+        if(repairerSpawn && !builderSpawn && !upgraderSpawn && !harvesterSpawn) {
             var newName = 'Repairer' + Game.time;
             Game.spawns['Spawn1'].spawnCreep([WORK,CARRY,MOVE,MOVE], newName, 
                 {memory: {role: 'repairer'}});
