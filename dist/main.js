@@ -19,7 +19,7 @@ module.exports.loop = function () {
 
     failsafe.saveMyRoom('W48S31');
     
-    spawner.run(2, 2, 1, 1);
+    spawner.run(3, 2, 1, 1);
     //harvester, upgrader, builder, repairer
 
 
