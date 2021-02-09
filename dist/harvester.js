@@ -51,7 +51,9 @@ var roleHarvester = {
                 }
                 creep.say(message);
                 creep.memory.harvesting = false;
-                if(creep.transfer(targ, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE || (creep.store.getFreeCapacity() == 0)) {
+                var res = creep.transfer(targ, RESOURCE_ENERGY);
+                console.log("Result of Transfer Attempt" + res);
+                if(res == ERR_NOT_IN_RANGE || (creep.store.getFreeCapacity() == 0)) {
                     creep.moveTo(targ, {visualizePathStyle: {stroke: '#ffffff'}});
                 }
             }
