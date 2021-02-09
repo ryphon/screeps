@@ -16,8 +16,8 @@ var roleRepairer = {
                 }
             });
             if(creep.withdraw(container[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                creep.moveTo(container[0], {visualizePathStyle: {stroke: '#ffaa00'}});
                 creep.say('withdraw');
+                creep.moveTo(container[0], {visualizePathStyle: {stroke: '#ffaa00'}});
             }
         }
         else {
