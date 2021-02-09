@@ -8,7 +8,8 @@ module.exports = {
             if (wall.hits <= 100) {
                 if (hostiles.length > 0) {
                     Game.rooms[myRoomName].controller.activateSafeMode();
+                }
             }
         }
     }
-}; 
+};
