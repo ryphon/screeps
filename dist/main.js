@@ -3,7 +3,7 @@ var roleUpgrader = require('upgrader');
 var roleBuilder = require('builder');
 var roleRepairer = require('repairer');
 var spawner = require('spawner');
-var failsafe = requrie('failsafe');
+var failsafe = require('failsafe');
 
 module.exports.loop = function () {
     // source 0 is top
