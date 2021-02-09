@@ -3,6 +3,7 @@ var roleUpgrader = require('upgrader');
 var roleBuilder = require('builder');
 var roleRepairer = require('repairer');
 var spawner = require('spawner');
+var failsafe = requrie('failsafe');
 
 module.exports.loop = function () {
     // source 0 is top
@@ -15,6 +16,8 @@ module.exports.loop = function () {
             //console.log('Clearing non-existing creep memory:', name);
         }
     }
+
+    failsafe.saveMyRoom('W48S31');
     
     spawner.run(2, 2, 1, 1);
     //harvester, upgrader, builder, repairer
