@@ -41,9 +41,7 @@ var roleRepairer = {
                         max = targ.hitsMax;
                         cur = hp / max;
                         if (ticks < 1000) {
-                            if(creep.repair(targ) == ERR_NOT_IN_RANGE) {
-                                creep.moveTo(targ, {visualizePathStyle: {stroke: '#0fffff'}});
-                            }
+                            break
                         }
                     }
                 }
