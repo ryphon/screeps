@@ -41,15 +41,9 @@ var roleRepairer = {
                         hp = targ.hits;
                         max = targ.hitsMax;
                         cur = hp / max;
-                        if (ticks < 200) {
-                            if(targ.structureType == STRUCTURE_ROAD ||
-                                (targ.structureType == STRUCTURE_CONTAINER && tar.hits < '100000')) {
-                                creep.say("r>roads");
-                                break;
-                            } else if(targ.hits < '100000') {
-                                creep.say("r>container");
-                                break;
-                            }
+                        if(targ.structureType == STRUCTURE_CONTAINER && targ.hits < '100000') {
+                            creep.say("r>container");
+                            break;
                         }
                     }
                 }
