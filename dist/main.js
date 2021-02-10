@@ -4,6 +4,7 @@ var roleBuilder = require('builder');
 var roleRepairer = require('repairer');
 var spawner = require('spawner');
 var failsafe = require('failsafe');
+var tower = require('tower');
 
 module.exports.loop = function () {
     // source 0 is top
@@ -22,6 +23,7 @@ module.exports.loop = function () {
     spawner.run(2, 2, 1, 1);
     //harvester, upgrader, builder, repairer
 
+    tower.run('W48S31');
 
     for(var name in Game.creeps) {
         var creep = Game.creeps[name];
