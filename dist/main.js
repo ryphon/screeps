@@ -23,7 +23,7 @@ module.exports.loop = function () {
     spawner.run(2, 2, 1, 1);
     //harvester, upgrader, builder, repairer
 
-    //tower.run('W48S31');
+    tower.run('W48S31');
 
     for(var name in Game.creeps) {
         var creep = Game.creeps[name];
