@@ -34,6 +34,7 @@ var roleRepairer = {
                     var max = targets[tar].hitsMax;
                     var percent = hp / max;
                     ticks = targets[tar].ticksToDecay
+                    console.log("Ticks to decay for "+targ.structureType+" are "+ticks);
                     if (percent < cur || ticks < curTicks) {
                         curTicks = ticks
                         targ = targets[tar];
@@ -41,6 +42,7 @@ var roleRepairer = {
                         max = targ.hitsMax;
                         cur = hp / max;
                         if (ticks < 1000) {
+                            if(targ.
                             if(targ.hits < '100000') {
                                 break
                             }
