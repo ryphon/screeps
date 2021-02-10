@@ -34,7 +34,7 @@ var roleRepairer = {
                     var max = targets[tar].hitsMax;
                     var percent = hp / max;
                     ticks = targets[tar].ticksToDecay
-                    console.log("Ticks to decay for "+targ.structureType+" are "+ticks);
+                    console.log("Ticks to decay for "+targets[tar].structureType+" are "+ticks);
                     if (percent < cur || ticks < curTicks) {
                         curTicks = ticks
                         targ = targets[tar];
