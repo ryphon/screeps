@@ -41,7 +41,7 @@ var roleRepairer = {
                         hp = targ.hits;
                         max = targ.hitsMax;
                         cur = hp / max;
-                        if (ticks < 1000) {
+                        if (ticks < 500) {
                                 break
                         }
                     }
