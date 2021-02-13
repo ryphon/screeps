@@ -18,12 +18,17 @@ module.exports.loop = function () {
         }
     }
 
-    failsafe.saveMyRoom('W48S31');
+    // Set memory configs and spawn queue for bootstrap
+    if (!Memory.initialized || Object.keys(Memory.creeps).length == 0) {
+        var init = require('init');
+        init.run();
+    }
+    failsafe.saveMyRoom();
     
-    spawner.run(2, 2, 1, 1);
+    spawner.run();
     //harvester, upgrader, builder, repairer
 
-    tower.run('W48S31');
+    tower.run();
 
     for(var name in Game.creeps) {
         var creep = Game.creeps[name];
