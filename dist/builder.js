@@ -22,7 +22,7 @@ module.exports = {
             var container = creep.pos.findClosestByPath(FIND_STRUCTURES, {
                 filter: (structure) => {
                     return (
-                        structure.structureType == STRUCTURE_CONTAINER
+                        structure.structureType == STRUCTURE_CONTAINER || structure.structureType == STRUCTURE_STORAGE
                     ) && (
                         structure.store[RESOURCE_ENERGY] > 0
                     );
