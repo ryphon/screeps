@@ -1,66 +1,55 @@
-var roleHarvester = {
+module.exports = {
 
     /** @param {Creep} creep **/
     run: function(creep) {
 	    if(creep.store.getFreeCapacity() > 0 && creep.memory.harvesting == true) {
-            var sources = creep.room.find(FIND_SOURCES);
-            if(creep.harvest(sources[1]) == ERR_NOT_IN_RANGE) {
-                creep.moveTo(sources[1], {visualizePathStyle: {stroke: '#ffaa00'}});
-                //creep.say('🔄 harvest');
+            var source = creep.pos.findClosestByPath(FIND_SOURCES_ACTIVE);
+            if(creep.harvest(source) == ERR_NOT_IN_RANGE) {
+                creep.moveTo(source, {visualizePathStyle: {stroke: '#ffaa00'}});
+                creep.say('🔄 harvest');
             }
-        }
-        else {
-            var targets = creep.room.find(FIND_STRUCTURES, {
+        } else {
+            creep.memory.harvesting = false;
+            var targets = creep.room.find(FIND_MY_STRUCTURES, {
                     filter: (structure) => {
-                        return (structure.structureType == STRUCTURE_EXTENSION ||
-                                structure.structureType == STRUCTURE_SPAWN ||
-                                structure.structureType == STRUCTURE_TOWER) && 
-                                (structure.store.getCapacity(RESOURCE_ENERGY) - structure.store[RESOURCE_ENERGY]) >= 0;
+                        return (
+                            structure.structureType == STRUCTURE_EXTENSION ||
+                            structure.structureType == STRUCTURE_SPAWN ||
+                            structure.structureType == STRUCTURE_TOWER
+                        ) && (
+                            (structure.store.getCapacity(RESOURCE_ENERGY) - structure.store[RESOURCE_ENERGY]) > 0
+                        );
                     }
             });
             if(targets.length > 0) {
                 var cur = 1;
-                var targ;
-                for(var tar in targets) {
-                    var used = targets[tar].store[RESOURCE_ENERGY];
-                    var cap = targets[tar].store.getCapacity(RESOURCE_ENERGY);
+                var bestTarget;
+                for(let target of targets) {
+                    var used = target.store[RESOURCE_ENERGY];
+                    var cap = target.store.getCapacity(RESOURCE_ENERGY);
                     var pct = used / cap;
                     if (pct < cur) {
-                        targ = targets[tar];
-                        var used = targ.store[RESOURCE_ENERGY];
-                        var cap = targ.store.getCapacity(RESOURCE_ENERGY);
-                        cur = used / cap;
+                        cur = pct;
+                        bestTarget = target;
                     }
                 }
-                if (targ == undefined) {
-                    targ = creep.room.find(FIND_STRUCTURES, {
-                        filter: (structure) => {return(structure.structureType == STRUCTURE_CONTAINER);}
-                    })[0];
+                if (typeof bestTarget == "undefined") {
                     // container as last resort
+                    bestTarget = creep.pos.findClosestByPath(FIND_STRUCTURES, {
+                        filter: (structure) => structure.structureType == STRUCTURE_CONTAINER
+                    });
                 }
-                try {
-                    message = 'h>' + targ.id
-                    if (targ.id === '6020311aad995b1ee84a403d') {
-                        message = 'h> Spawn'
-                    } else if (targ.id === '6020a30f3780aca180f05795') {
-                        message = 'h> Container'
-                    }
-                } catch(err) {
-                    message = 'h>BADID'
+                if (typeof target == "undefined") {
+                    // If all else fails, go home
+                    bestTarget = Game.spawns["Spawn1"];
                 }
-                creep.say(message);
-                creep.memory.harvesting = false;
-                var res = creep.transfer(targ, RESOURCE_ENERGY);
-                console.log("Result of Transfer Attempt" + res);
-                if(res == ERR_NOT_IN_RANGE || (creep.store.getFreeCapacity() == 0)) {
-                    creep.moveTo(targ, {visualizePathStyle: {stroke: '#ffffff'}});
+                if(creep.transfer(bestTarget, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE || (creep.store.getFreeCapacity() == 0)) {
+                    creep.moveTo(bestTarget, {visualizePathStyle: {stroke: '#ffffff'}});
                 }
             }
         }
-        if (creep.memory.harvesting == false && creep.store.getCapacity() == creep.store.getFreeCapacity()) {
+        if (creep.store.getCapacity() == creep.store.getFreeCapacity()) {
             creep.memory.harvesting = true;
         }
 	}
 };
-
-module.exports = roleHarvester;
