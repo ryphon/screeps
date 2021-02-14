@@ -47,8 +47,8 @@ module.exports = {
                 ]
             },
             "repairer": {
-                "minimumCount": 0,
-                "desiredCount": 1,
+                "minimumCount": 1,
+                "desiredCount": 2,
                 "bodyParts": [
                     [WORK,CARRY,MOVE,MOVE],
                     [WORK, CARRY, MOVE]

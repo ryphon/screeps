@@ -18,21 +18,21 @@ module.exports = {
             } else {
                 // Check for role below minimum count
                 var creepCounts = {};
-                for (let roleName of Memory.rolesNamesByPriority) {
+                for (const roleName of Memory.roleNamesByPriority) {
                     let role = Memory.roles[roleName];
-                    creepCounts[role.name] =  _.filter(Game.creeps, (creep) => creep.memory.role == role.name).length
-                    if (creepCounts[role.name] < role.minimumCount) {
-                        spawnCreep = [role.bodyParts[1], role.name + Game.time, {"memory":{"role":role.name}}]
-                        console.log("Attempting to spjwn creep for minimum role: " + spawnCreep[1]);
+                    creepCounts[roleName] =  _.filter(Game.creeps, (creep) => creep.memory.role == roleName).length
+                    if (creepCounts[roleName] < role.minimumCount) {
+                        spawnCreep = [role.bodyParts[1], roleName + Game.time, {"memory":{"role":roleName}}]
+                        console.log("Attempting to spawn creep for minimum role: " + spawnCreep[1]);
                         break;
                     }
                 }
                 if (spawnCreep == null) {
                     // Check for role below desired count
-                    for (let roleName of Memory.rolesNamesByPriority) {
+                    for (let roleName of Memory.roleNamesByPriority) {
                         let role = Memory.roles[roleName];
-                        if (creepCounts[role.name] < role.desiredCount) {
-                            spawnCreep = [role.bodyParts[0], role.name + Game.time, {"memory":{"role":role.name}}]
+                        if (creepCounts[roleName] < role.desiredCount) {
+                            spawnCreep = [role.bodyParts[0], roleName + Game.time, {"memory":{"role":roleName}}]
                             console.log("Attempting to spawn creep for desired role: " + spawnCreep[1]);
                             break;
                         }
