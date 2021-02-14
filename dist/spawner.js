@@ -18,17 +18,19 @@ module.exports = {
             } else {
                 // Check for role below minimum count
                 var creepCounts = {};
-                for (let role of Memory.roles) {
+                for (let roleName of Memory.rolesNamesByPriority) {
+                    let role = Memory.roles[roleName];
                     creepCounts[role.name] =  _.filter(Game.creeps, (creep) => creep.memory.role == role.name).length
                     if (creepCounts[role.name] < role.minimumCount) {
                         spawnCreep = [role.bodyParts[1], role.name + Game.time, {"memory":{"role":role.name}}]
-                        console.log("Attempting to spawn creep for minimum role: " + spawnCreep[1]);
+                        console.log("Attempting to spjwn creep for minimum role: " + spawnCreep[1]);
                         break;
                     }
                 }
-                if (typeof spawnCreep == "undefined") {
+                if (spawnCreep == null) {
                     // Check for role below desired count
-                    for (let role of Memory.roles) {
+                    for (let roleName of Memory.rolesNamesByPriority) {
+                        let role = Memory.roles[roleName];
                         if (creepCounts[role.name] < role.desiredCount) {
                             spawnCreep = [role.bodyParts[0], role.name + Game.time, {"memory":{"role":role.name}}]
                             console.log("Attempting to spawn creep for desired role: " + spawnCreep[1]);
@@ -37,7 +39,7 @@ module.exports = {
                     }
                 }
                 if (spawnCreep != null) {
-                    // Spawn desired creep, if any desired
+                    // Spawn desired creep, if any
                     var ret = Game.spawns['Spawn1'].spawnCreep(
                         spawnCreep[0],
                         spawnCreep[1],

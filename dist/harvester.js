@@ -21,31 +21,29 @@ module.exports = {
                         );
                     }
             });
-            if(targets.length > 0) {
-                var cur = 1;
-                var bestTarget;
-                for(let target of targets) {
-                    var used = target.store[RESOURCE_ENERGY];
-                    var cap = target.store.getCapacity(RESOURCE_ENERGY);
-                    var pct = used / cap;
-                    if (pct < cur) {
-                        cur = pct;
-                        bestTarget = target;
-                    }
+            var cur = 1;
+            var bestTarget;
+            for(let target of targets) {
+                var used = target.store[RESOURCE_ENERGY];
+                var cap = target.store.getCapacity(RESOURCE_ENERGY);
+                var pct = used / cap;
+                if (pct < cur) {
+                    cur = pct;
+                    bestTarget = target;
                 }
-                if (typeof bestTarget == "undefined") {
-                    // container as last resort
-                    bestTarget = creep.pos.findClosestByPath(FIND_STRUCTURES, {
-                        filter: (structure) => structure.structureType == STRUCTURE_CONTAINER
-                    });
-                }
-                if (typeof target == "undefined") {
-                    // If all else fails, go home
-                    bestTarget = Game.spawns["Spawn1"];
-                }
-                if(creep.transfer(bestTarget, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE || (creep.store.getFreeCapacity() == 0)) {
-                    creep.moveTo(bestTarget, {visualizePathStyle: {stroke: '#ffffff'}});
-                }
+            }
+            if (bestTarget == null) {
+                // container as last resort
+                bestTarget = creep.pos.findClosestByPath(FIND_STRUCTURES, {
+                    filter: (structure) => structure.structureType == STRUCTURE_CONTAINER
+                });
+            }
+            if (bestTarget == null) {
+                // If all else fails, go home
+                bestTarget = Game.spawns["Spawn1"];
+            }
+            if(creep.transfer(bestTarget, RESOURCE_ENERGY) != OK || (creep.store.getFreeCapacity() == 0)) {
+                creep.moveTo(bestTarget, {visualizePathStyle: {stroke: '#ffffff'}});
             }
         }
         if (creep.store.getCapacity() == creep.store.getFreeCapacity()) {

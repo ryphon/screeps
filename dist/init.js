@@ -13,9 +13,8 @@ module.exports = {
             [[WORK, CARRY, MOVE], "Builder5",  { memory: { role: 'builder' }}],
             [[WORK, CARRY, MOVE], "Builder6",  { memory: { role: 'builder' }}],
         ];
-        Memory.roles = [
-            {
-                "name": "harvester",
+        Memory.roles = {
+            "harvester": {
                 "minimumCount": 2,
                 "desiredCount": 3,
                 "bodyParts": [
@@ -23,8 +22,15 @@ module.exports = {
                     [WORK, CARRY, MOVE]
                 ]
             },
-            {
-                "name": "upgrader",
+            "defender": {
+                "minimumCount": 0,
+                "desiredCount": 1,
+                "bodyParts": [
+                    [RANGED_ATTACK,RANGED_ATTACK,MOVE,MOVE,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH],
+                    [RANGED_ATTACK,MOVE,MOVE,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH],
+                ]
+            },
+            "upgrader": {
                 "minimumCount": 1,
                 "desiredCount": 2,
                 "bodyParts": [
@@ -32,17 +38,15 @@ module.exports = {
                     [WORK, CARRY, MOVE]
                 ]
             },
-            {
-                "name": "builder",
-                "minimumCount": 3,
-                "desiredCount": 4,
+            "builder": {
+                "minimumCount": 6,
+                "desiredCount": 8,
                 "bodyParts": [
                     [WORK,WORK,WORK,CARRY,CARRY,MOVE,MOVE],
                     [WORK, CARRY, MOVE]
                 ]
             },
-            {
-                "name": "repairer",
+            "repairer": {
                 "minimumCount": 0,
                 "desiredCount": 1,
                 "bodyParts": [
@@ -50,6 +54,13 @@ module.exports = {
                     [WORK, CARRY, MOVE]
                 ]
             }
+        };
+        Memory.roleNamesByPriority = [
+            "harvester",
+            "upgrader",
+            "builder",
+            "repairer",
+            "defender"
         ];
         Memory.initialized = true;
     }
