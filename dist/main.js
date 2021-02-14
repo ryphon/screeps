@@ -2,28 +2,32 @@ var roleHarvester = require('harvester');
 var roleUpgrader = require('upgrader');
 var roleBuilder = require('builder');
 var roleRepairer = require('repairer');
+var roleDefender = require('defender');
 var spawner = require('spawner');
 var failsafe = require('failsafe');
 var tower = require('tower');
 
 module.exports.loop = function () {
-    // source 0 is top
-    // source 1 is bottom
-    // why hardcode though :(
 
     for(var name in Memory.creeps) {
         if(!Game.creeps[name]) {
             delete Memory.creeps[name];
+            roleDefender.cleanMemory(name);
             //console.log('Clearing non-existing creep memory:', name);
         }
     }
 
-    failsafe.saveMyRoom('W48S31');
+    // Set memory configs and spawn queue for bootstrap
+    if (!Memory.initialized || Object.keys(Memory.creeps).length == 0) {
+        var init = require('init');
+        init.run();
+    }
+    failsafe.saveMyRoom();
     
-    spawner.run(2, 2, 1, 1);
+    spawner.run();
     //harvester, upgrader, builder, repairer
 
-    tower.run('W48S31');
+    tower.run();
 
     for(var name in Game.creeps) {
         var creep = Game.creeps[name];
@@ -38,6 +42,9 @@ module.exports.loop = function () {
         }
         if(creep.memory.role == 'repairer') {
             roleRepairer.run(creep);
+        }
+        if(creep.memory.role == 'defender') {
+            roleDefender.run(creep);
         }
     }
 }
