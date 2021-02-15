@@ -4,8 +4,10 @@ module.exports = {
     run: function(creep) {
 
         if(creep.store[RESOURCE_ENERGY] == 0) {
+            if (creep.memory.building) {
+                creep.say('🔄 withdraw');
+            }
             creep.memory.upgrading = false;
-            creep.say('🔄 harvest');
 	    }
 	    
 	    if(!creep.memory.upgrading && creep.store.getFreeCapacity() == 0) {
