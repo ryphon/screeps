@@ -2,11 +2,21 @@ module.exports = {
 
     /** @param {Creep} creep **/
     run: function(creep) {
-	    if(creep.store.getFreeCapacity() > 0 && creep.memory.harvesting == true) {
+
+        if(creep.store[RESOURCE_ENERGY] == 0) {
+            if (!creep.memory.harvesting) {
+                creep.say('🔄 harvest');
+            }
+            creep.memory.harvesting = true;
+        } else if(creep.memory.harvesting && creep.store.getFreeCapacity() == 0) {
+            creep.memory.harvesting = false;
+            creep.say('store');
+        }
+
+        if(creep.memory.harvesting) {
             var source = creep.pos.findClosestByPath(FIND_SOURCES_ACTIVE);
             if(creep.harvest(source) == ERR_NOT_IN_RANGE) {
                 creep.moveTo(source, {visualizePathStyle: {stroke: '#ffaa00'}});
-                creep.say('🔄 harvest');
             }
         } else {
             creep.memory.harvesting = false;
@@ -46,8 +56,5 @@ module.exports = {
                 creep.moveTo(bestTarget, {visualizePathStyle: {stroke: '#ffffff'}});
             }
         }
-        if (creep.store.getCapacity() == creep.store.getFreeCapacity()) {
-            creep.memory.harvesting = true;
-        }
-	}
+    }
 };

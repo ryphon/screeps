@@ -25,7 +25,6 @@ module.exports.loop = function () {
     failsafe.saveMyRoom();
     
     spawner.run();
-    //harvester, upgrader, builder, repairer
 
     tower.run();
 

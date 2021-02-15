@@ -1,68 +1,74 @@
-var roleRepairer = {
+module.exports = {
 
     /** @param {Creep} creep **/
     run: function(creep) {
-        //if(creep.store.getFreeCapacity() > 10) {
-        //    var sources = creep.room.find(FIND_SOURCES);
-        //    if(creep.harvest(sources[1]) == ERR_NOT_IN_RANGE) {
-        //        creep.moveTo(sources[1], {visualizePathStyle: {stroke: '#ffaa00'}});
-        //        creep.say('🔄 harvest');
-        //    }
-        //}
-	    if(creep.store.getFreeCapacity() > 0 && creep.memory.repairing == false) {
-            var container = creep.room.find(FIND_STRUCTURES, {
-                filter: (structure) => {
-                    return (structure.structureType == STRUCTURE_CONTAINER)
+
+	    if(creep.store[RESOURCE_ENERGY] == 0) {
+            creep.memory.repairing = false;
+            creep.say('🔄 withdraw');
+	    } else if(!creep.memory.repair && creep.store.getFreeCapacity() == 0) {
+            creep.memory.repairTarget = null;
+	        creep.memory.repairing = true;
+	        creep.say('🚧 repair');
+	    }
+
+	    if(creep.memory.repairing) {
+            var target;
+            if (creep.memory.repairTarget != null) {
+                target = Game.getObjectById(creep.memory.repairTarget);
+                if (target.hits == target.hitsMax) {
+                    target = null;
+                    creep.memory.repairTarget = null;
                 }
-            });
-            if(creep.withdraw(container[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                creep.say('withdraw');
-                creep.moveTo(container[0], {visualizePathStyle: {stroke: '#ffaa00'}});
             }
-        }
-        else {
-            var targets = creep.room.find(FIND_STRUCTURES, {
-                    filter: (structure) => {return(structure.structureType == STRUCTURE_ROAD ||
-                                                  structure.structureType == STRUCTURE_CONTAINER)}
-            });
-            if(targets.length > 0) {
-                var cur = 100;
-                var targ;
-                var curTicks = 9999;
-                var ticks;
-                for(var tar in targets) {
-                    var hp = targets[tar].hits;
-                    var max = targets[tar].hitsMax;
-                    var percent = hp / max;
-                    ticks = targets[tar].ticksToDecay
-                    if (percent < cur || ticks < curTicks) {
-                        curTicks = ticks
-                        targ = targets[tar];
-                        hp = targ.hits;
-                        max = targ.hitsMax;
-                        cur = hp / max;
-                        if(targ.structureType == STRUCTURE_CONTAINER && targ.hits < '100000') {
-                            creep.say("r>container");
-                            break;
+            if (target == null) {
+                for (i = 1; i <= 10; i++) {
+                    // Find nearest repair target by 10% hits buckets
+                    target = creep.pos.findClosestByPath(FIND_STRUCTURES, {
+                        filter: (structure) => {
+                            return (
+                                structure.structureType == STRUCTURE_ROAD ||
+                                structure.structureType == STRUCTURE_CONTAINER
+                            ) && ((10*structure.hits/structure.hitsMax) < i);
                         }
+                    })
+                    if (target != null) {
+                        creep.memory.repairTarget = target.id;
+                        break;
                     }
                 }
-                try {
-                    message = 'r>' + targ.id
-                } catch(err) {
-                    message = 'r>BADID'
+            }
+            if (target != null) {
+                if(creep.repair(target) == ERR_NOT_IN_RANGE || (creep.store.getFreeCapacity() == 0)) {
+                    creep.moveTo(target, {visualizePathStyle: {stroke: '#0fffff'}});
                 }
-                creep.say(message);
-                creep.memory.repairing = true;
-                if(creep.repair(targ) == ERR_NOT_IN_RANGE || (creep.store.getFreeCapacity() == 0)) {
-                    creep.moveTo(targ, {visualizePathStyle: {stroke: '#0fffff'}});
+            } else {
+                // If all else fails, go home
+                target = Game.spawns['Spawn1'];
+                creep.moveTo(target, {visualizePathStyle: {stroke: '#0fffff'}});
+            }
+        } else {
+            var container = creep.pos.findClosestByPath(FIND_STRUCTURES, {
+                filter: (structure) => {
+                    return (
+                        structure.structureType == STRUCTURE_CONTAINER
+                    ) && (
+                        structure.store[RESOURCE_ENERGY] > 0
+                    );
+                }
+            });
+            if(container != null) {
+                if (creep.withdraw(container, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+                    creep.say('🔄 withdraw');
+                    creep.moveTo(container, {visualizePathStyle: {stroke: '#ffaa00'}});
+                }
+            } else {
+                var source = creep.pos.findClosestByPath(FIND_SOURCES_ACTIVE);
+                if (creep.harvest(source, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+                    creep.say('🔄 withdraw');
+                    creep.moveTo(source, {visualizePathStyle: {stroke: '#ffaa00'}});
                 }
             }
-        }
-        if (creep.memory.repairing == true && creep.store.getUsedCapacity() == 0) {
-            creep.memory.repairing = false;
         }
 	}
 };
-
-module.exports = roleRepairer;
