@@ -21,6 +21,7 @@ module.exports = {
                 for (const roleName of Memory.roleNamesByPriority) {
                     let role = Memory.roles[roleName];
                     creepCounts[roleName] =  _.filter(Game.creeps, (creep) => creep.memory.role == roleName).length
+                    console.log(roleName + " - " + creepCounts[roleName] + " of Minimum: " + role.minimumCount + ", Desired: " + role.desiredCount);
                     if (creepCounts[roleName] < role.minimumCount) {
                         spawnCreep = [role.bodyParts[1], roleName + Game.time, {"memory":{"role":roleName}}]
                         console.log("Attempting to spawn creep for minimum role: " + spawnCreep[1]);

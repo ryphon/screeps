@@ -24,8 +24,6 @@ module.exports = {
                     filter: (structure) => {
                         return (
                             structure.structureType == STRUCTURE_EXTENSION ||
-                            structure.structureType == STRUCTURE_CONTAINER ||
-                            structure.structureType == STRUCTURE_STORAGE ||
                             structure.structureType == STRUCTURE_SPAWN ||
                             structure.structureType == STRUCTURE_TOWER
                         ) && (
@@ -47,9 +45,17 @@ module.exports = {
             if (bestTarget == null) {
                 // container as last resort
                 bestTarget = creep.pos.findClosestByPath(FIND_STRUCTURES, {
-                    filter: (structure) => structure.structureType == STRUCTURE_CONTAINER
+                    filter: (structure) => {
+                        return (
+                            structure.structureType == STRUCTURE_CONTAINER ||
+                            structure.structureType == STRUCTURE_STORAGE
+                        ) && (
+                            (structure.store.getCapacity(RESOURCE_ENERGY) - structure.store[RESOURCE_ENERGY]) > 0
+                        );
+                    }
                 });
             }
+
             if (bestTarget == null) {
                 // If all else fails, go home
                 bestTarget = Game.spawns["Spawn1"];
