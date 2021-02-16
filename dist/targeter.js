@@ -25,6 +25,7 @@ module.exports = {
     },
 
     findEnergyStoreTarget(creep) {
+        var target;
         for (const i of [2, 5, 10]) {
             target = creep.pos.findClosestByPath(FIND_STRUCTURES, {
                 filter: (structure) => {
