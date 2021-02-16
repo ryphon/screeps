@@ -13,7 +13,6 @@ module.exports = {
     },
     run: function(creep) {
         if (creep.memory.flagName == null) {
-            console.log(creep.name + " choosing a flag");
             // Assign creep to a flag
             let flags = creep.room.find(FIND_FLAGS);
             for (let flag of flags) {
@@ -31,16 +30,12 @@ module.exports = {
 
         let nearestHostile = creep.pos.findClosestByPath(FIND_HOSTILE_CREEPS);
         if (nearestHostile != null) {
-            console.log(creep.name + " attacking " + nearestHostile.name);
             let res = creep.rangedAttack(nearestHostile);
-            console.log(creep.name + " result: " + res);
             if (res == ERR_NOT_IN_RANGE) {
-                console.log(creep.name + " moving closer to " + nearestHostile.name);
                 creep.moveTo(nearestHostile, {visualizePathStyle: {stroke: '#ff0000'}});
             }
         } else {
             let flag = Game.flags[creep.memory.flagName];
-            console.log(creep.name + " returning to " + flag.name);
             creep.moveTo(flag, {visualizePathStyle: {stroke: '#ffffff'}});
         }
     }

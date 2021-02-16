@@ -59,13 +59,11 @@ module.exports = {
             });
             if(container != null) {
                 if (creep.withdraw(container, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                    creep.say('🔄 withdraw');
                     creep.moveTo(container, {visualizePathStyle: {stroke: '#ffaa00'}});
                 }
             } else {
                 var source = creep.pos.findClosestByPath(FIND_SOURCES_ACTIVE);
                 if (creep.harvest(source, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                    creep.say('🔄 withdraw');
                     creep.moveTo(source, {visualizePathStyle: {stroke: '#ffaa00'}});
                 }
             }

@@ -16,7 +16,7 @@ module.exports = {
         Memory.roles = {
             "harvester": {
                 "minimumCount": 2,
-                "desiredCount": 3,
+                "desiredCount": 6,
                 "bodyParts": [
                     [WORK,WORK,WORK,WORK,CARRY,MOVE,MOVE],
                     [WORK, CARRY, MOVE]
@@ -32,7 +32,7 @@ module.exports = {
             },
             "upgrader": {
                 "minimumCount": 1,
-                "desiredCount": 2,
+                "desiredCount": 4,
                 "bodyParts": [
                     [WORK,WORK,WORK,CARRY,CARRY,MOVE,MOVE],
                     [WORK, CARRY, MOVE]

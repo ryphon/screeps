@@ -20,7 +20,7 @@ module.exports = {
             }
         } else {
             creep.memory.harvesting = false;
-            var targets = creep.room.find(FIND_MY_STRUCTURES, {
+            var targets = creep.room.find(FIND_STRUCTURES, {
                     filter: (structure) => {
                         return (
                             structure.structureType == STRUCTURE_EXTENSION ||
@@ -45,9 +45,17 @@ module.exports = {
             if (bestTarget == null) {
                 // container as last resort
                 bestTarget = creep.pos.findClosestByPath(FIND_STRUCTURES, {
-                    filter: (structure) => structure.structureType == STRUCTURE_CONTAINER
+                    filter: (structure) => {
+                        return (
+                            structure.structureType == STRUCTURE_CONTAINER ||
+                            structure.structureType == STRUCTURE_STORAGE
+                        ) && (
+                            (structure.store.getCapacity(RESOURCE_ENERGY) - structure.store[RESOURCE_ENERGY]) > 0
+                        );
+                    }
                 });
             }
+
             if (bestTarget == null) {
                 // If all else fails, go home
                 bestTarget = Game.spawns["Spawn1"];
