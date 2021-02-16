@@ -20,48 +20,40 @@ module.exports = {
             }
         } else {
             creep.memory.harvesting = false;
-            var targets = creep.room.find(FIND_STRUCTURES, {
+            for (const i of [2, 5, 10]) {
+                target = creep.pos.findClosestByPath(FIND_STRUCTURES, {
                     filter: (structure) => {
                         return (
                             structure.structureType == STRUCTURE_EXTENSION ||
                             structure.structureType == STRUCTURE_SPAWN ||
                             structure.structureType == STRUCTURE_TOWER
                         ) && (
-                            (structure.store.getCapacity(RESOURCE_ENERGY) - structure.store[RESOURCE_ENERGY]) > 0
-                        );
-                    }
-            });
-            var cur = 1;
-            var bestTarget;
-            for(let target of targets) {
-                var used = target.store[RESOURCE_ENERGY];
-                var cap = target.store.getCapacity(RESOURCE_ENERGY);
-                var pct = used / cap;
-                if (pct < cur) {
-                    cur = pct;
-                    bestTarget = target;
-                }
-            }
-            if (bestTarget == null) {
-                // container as last resort
-                bestTarget = creep.pos.findClosestByPath(FIND_STRUCTURES, {
-                    filter: (structure) => {
-                        return (
-                            structure.structureType == STRUCTURE_CONTAINER ||
-                            structure.structureType == STRUCTURE_STORAGE
-                        ) && (
-                            (structure.store.getCapacity(RESOURCE_ENERGY) - structure.store[RESOURCE_ENERGY]) > 0
+                            (10*structure.store[RESOURCE_ENERGY]/structure.store.getCapacity(RESOURCE_ENERGY)) < i
                         );
                     }
                 });
+                if (target != null) {
+                    break;
+                }
+            }
+            if (target == null) {
+                // container as last resort
+                target = creep.pos.findClosestByPath(FIND_STRUCTURES, {
+                    filter: (structure) => {
+                        return (
+                            structure.structureType == STRUCTURE_CONTAINER ||
+                            structure.structureType == STRUCTURE_STORAGE) && (
+                            (structure.store.getCapacity(RESOURCE_ENERGY) - structure.store[RESOURCE_ENERGY]) > 0);
+                                            }
+                });
             }
 
-            if (bestTarget == null) {
+            if (target == null) {
                 // If all else fails, go home
-                bestTarget = Game.spawns["Spawn1"];
+                target = Game.spawns["Spawn1"];
             }
-            if(creep.transfer(bestTarget, RESOURCE_ENERGY) != OK || (creep.store.getFreeCapacity() == 0)) {
-                creep.moveTo(bestTarget, {visualizePathStyle: {stroke: '#ffffff'}});
+            if(creep.transfer(target, RESOURCE_ENERGY) != OK || (creep.store.getFreeCapacity() == 0)) {
+                creep.moveTo(target, {visualizePathStyle: {stroke: '#ffffff'}});
             }
         }
     }
