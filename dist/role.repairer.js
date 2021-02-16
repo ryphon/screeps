@@ -1,29 +1,31 @@
+var targeter = require('targeter');
+
 module.exports = {
 
     /** @param {Creep} creep **/
     run: function(creep) {
 
 	    if(creep.store[RESOURCE_ENERGY] == 0) {
-            if (creep.memory.building) {
-                creep.say('🔄 withdraw');
-            }
-            creep.memory.building = false;
-	    } else if(!creep.memory.building && creep.store.getFreeCapacity() == 0) {
-	        creep.memory.building = true;
-	        creep.say('🚧 build');
+            creep.memory.repairing = false;
+            creep.say('🔄 withdraw');
+	    } else if(!creep.memory.repair && creep.store.getFreeCapacity() == 0) {
+            creep.memory.repairTarget = null;
+	        creep.memory.repairing = true;
+	        creep.say('🚧 repair');
 	    }
 
-	    if(creep.memory.building) {
-	        var target = creep.pos.findClosestByPath(FIND_CONSTRUCTION_SITES);
-            if(target != null) {
-                if(creep.build(target) == ERR_NOT_IN_RANGE) {
-                    creep.moveTo(target, {visualizePathStyle: {stroke: '#ffffff'}});
+	    if(creep.memory.repairing) {
+            var target = targeter.findRepairTarget(creep);
+            if (target != null) {
+                if(creep.repair(target) == ERR_NOT_IN_RANGE || (creep.store.getFreeCapacity() == 0)) {
+                    creep.moveTo(target, {visualizePathStyle: {stroke: '#0fffff'}});
                 }
             } else {
-                creep.say('Going home');
-                creep.moveTo(Game.spawns['Spawn1'], {visualizePathStyle: {stroke: '#ffffff'}});
+                // If all else fails, go home
+                target = Game.spawns['Spawn1'];
+                creep.moveTo(target, {visualizePathStyle: {stroke: '#0fffff'}});
             }
-	    } else {
+        } else {
             var container = creep.pos.findClosestByPath(FIND_STRUCTURES, {
                 filter: (structure) => {
                     return (
@@ -43,6 +45,6 @@ module.exports = {
                     creep.moveTo(source, {visualizePathStyle: {stroke: '#ffaa00'}});
                 }
             }
-	    }
+        }
 	}
 };
