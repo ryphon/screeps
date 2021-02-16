@@ -1,4 +1,5 @@
 'use strict';
+
 var targeter = require('targeter');
 
 module.exports = {
