@@ -15,7 +15,16 @@ module.exports = {
 	    }
 
 	    if(creep.memory.repairing) {
-            var target = targeter.findRepairTarget(creep);
+            if (creep.memory.repairTarget != null) {
+                target = Game.getObjectById(creep.memory.repairTarget);
+                if (target != null && target.hits == target.hitsMax) {
+                    target = null;
+                    creep.memory.repairTarget = null;
+                }
+            }
+            if (target == null) {
+                var target = targeter.findRepairTarget(creep);
+            }
             if (target != null) {
                 if(creep.repair(target) == ERR_NOT_IN_RANGE || (creep.store.getFreeCapacity() == 0)) {
                     creep.moveTo(target, {visualizePathStyle: {stroke: '#0fffff'}});
