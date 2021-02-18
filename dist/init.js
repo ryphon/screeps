@@ -1,8 +1,10 @@
+'use strict';
+
 module.exports = {
     run: function() {
         console.log("Bootstrap initialization triggered");
         Memory.spawnQueue = [
-            [[WORK, CARRY, MOVE], "Harvester1",  { memory: { role: 'harvester', harvesting: true}}],
+            [[WORK, CARRY, MOVE], "Harvester1",  { memory: { role: 'harvester'}}],
             [[WORK, CARRY, MOVE], "Harvester2",  { memory: { role: 'harvester' }}],
             [[WORK, CARRY, MOVE], "Upgrader1",  { memory: { role: 'upgrader' }}],
             [[WORK, CARRY, MOVE], "Upgrader2",  { memory: { role: 'upgrader' }}],

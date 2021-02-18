@@ -1,3 +1,7 @@
+'use strict';
+
+var targeter = require('targeter');
+
 module.exports = {
 
     /** @param {Creep} creep **/
@@ -13,30 +17,15 @@ module.exports = {
 	    }
 
 	    if(creep.memory.repairing) {
-            var target;
             if (creep.memory.repairTarget != null) {
                 target = Game.getObjectById(creep.memory.repairTarget);
-                if (target.hits == target.hitsMax) {
+                if (target != null && target.hits == target.hitsMax) {
                     target = null;
                     creep.memory.repairTarget = null;
                 }
             }
             if (target == null) {
-                for (i = 1; i <= 10; i++) {
-                    // Find nearest repair target by 10% hits buckets
-                    target = creep.pos.findClosestByPath(FIND_STRUCTURES, {
-                        filter: (structure) => {
-                            return (
-                                structure.structureType == STRUCTURE_ROAD ||
-                                structure.structureType == STRUCTURE_CONTAINER
-                            ) && ((10*structure.hits/structure.hitsMax) < i);
-                        }
-                    })
-                    if (target != null) {
-                        creep.memory.repairTarget = target.id;
-                        break;
-                    }
-                }
+                var target = targeter.findRepairTarget(creep);
             }
             if (target != null) {
                 if(creep.repair(target) == ERR_NOT_IN_RANGE || (creep.store.getFreeCapacity() == 0)) {

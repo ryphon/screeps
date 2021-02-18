@@ -1,8 +1,10 @@
-var roleHarvester = require('harvester');
-var roleUpgrader = require('upgrader');
-var roleBuilder = require('builder');
-var roleRepairer = require('repairer');
-var roleDefender = require('defender');
+'use strict';
+
+var roleHarvester = require('role.harvester');
+var roleUpgrader = require('role.upgrader');
+var roleBuilder = require('role.builder');
+var roleRepairer = require('role.repairer');
+var roleDefender = require('role.defender');
 var spawner = require('spawner');
 var failsafe = require('failsafe');
 var tower = require('tower');

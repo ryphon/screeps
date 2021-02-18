@@ -1,3 +1,5 @@
+'use strict';
+
 module.exports = {
     cleanMemory: function(creepName) {
         console.log("Cleaning up flag memory for " + creepName);
