@@ -26,33 +26,42 @@ module.exports = {
 
     findEnergyStoreTarget(creep) {
         var target;
-        for (const i of [2, 5, 10]) {
+        target = creep.pos.findClosestByPath(FIND_STRUCTURES, {
+            filter: (structure) => (
+                structure.structureType == STRUCTURE_EXTENSION &&
+                structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0
+            )
+        });
+        if (target == null) {
             target = creep.pos.findClosestByPath(FIND_STRUCTURES, {
-                filter: (structure) => {
-                    return (
-                        structure.structureType == STRUCTURE_EXTENSION ||
-                        structure.structureType == STRUCTURE_SPAWN ||
-                        structure.structureType == STRUCTURE_TOWER
-                    ) && (
-                        (10*structure.store[RESOURCE_ENERGY]/structure.store.getCapacity(RESOURCE_ENERGY)) < i
-                    );
-                }
+                filter: (structure) => (
+                    structure.structureType == STRUCTURE_SPAWN &&
+                    structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0
+                )
             });
-            if (target != null) {
-                break;
-            }
         }
         if (target == null) {
-            // container as last resort
             target = creep.pos.findClosestByPath(FIND_STRUCTURES, {
-                filter: (structure) => {
-                    return (
-                        structure.structureType == STRUCTURE_CONTAINER ||
-                        structure.structureType == STRUCTURE_STORAGE
-                    ) && (
-                        (structure.store.getCapacity(RESOURCE_ENERGY) - structure.store[RESOURCE_ENERGY]) > 0
-                    );
-                }
+                filter: (structure) => (
+                    structure.structureType == STRUCTURE_TOWER &&
+                    structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0
+                )
+            });
+        }
+        if (target == null) {
+            target = creep.pos.findClosestByPath(FIND_STRUCTURES, {
+                filter: (structure) => (
+                    structure.structureType == STRUCTURE_CONTAINER &&
+                    structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0
+                )
+            });
+        }
+        if (target == null) {
+            target = creep.pos.findClosestByPath(FIND_STRUCTURES, {
+                filter: (structure) => (
+                    structure.structureType == STRUCTURE_STORAGE &&
+                    structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0
+                )
             });
         }
         return target;
