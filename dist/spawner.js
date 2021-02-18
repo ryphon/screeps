@@ -1,3 +1,5 @@
+'use strict';
+
 module.exports = {
     run: function() {
         if (!Game.spawns['Spawn1'].spawning) {

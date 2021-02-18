@@ -1,3 +1,7 @@
+'use strict';
+
+var targeter = require('targeter');
+
 module.exports = {
 
     /** @param {Creep} creep **/
@@ -14,14 +18,21 @@ module.exports = {
 	    }
 
 	    if(creep.memory.building) {
-	        var target = creep.pos.findClosestByPath(FIND_CONSTRUCTION_SITES);
+            var target = targeter.findBuildTarget(creep);
             if(target != null) {
                 if(creep.build(target) == ERR_NOT_IN_RANGE) {
                     creep.moveTo(target, {visualizePathStyle: {stroke: '#ffffff'}});
                 }
             } else {
-                creep.say('Going home');
-                creep.moveTo(Game.spawns['Spawn1'], {visualizePathStyle: {stroke: '#ffffff'}});
+                target = targeter.findRepairTarget(creep);
+                if (target != null) {
+                    if(creep.repair(target) == ERR_NOT_IN_RANGE) {
+                        creep.moveTo(target, {visualizePathStyle: {stroke: '#ffffff'}});
+                    }
+                } else {
+                    creep.say('Going home');
+                    creep.moveTo(Game.spawns['Spawn1'], {visualizePathStyle: {stroke: '#ffffff'}});
+                }
             }
 	    } else {
             var container = creep.pos.findClosestByPath(FIND_STRUCTURES, {
