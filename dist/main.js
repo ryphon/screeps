@@ -8,6 +8,7 @@ var roleDefender = require('role.defender');
 var spawner = require('spawner');
 var failsafe = require('failsafe');
 var tower = require('tower');
+var link = require('link');
 
 module.exports.loop = function () {
 
@@ -15,6 +16,7 @@ module.exports.loop = function () {
         if(!Game.creeps[name]) {
             delete Memory.creeps[name];
             roleDefender.cleanMemory(name);
+            roleHarvester.cleanMemory(name);
             //console.log('Clearing non-existing creep memory:', name);
         }
     }
@@ -29,6 +31,8 @@ module.exports.loop = function () {
     spawner.run();
 
     tower.run();
+
+    link.run();
 
     for(var name in Game.creeps) {
         var creep = Game.creeps[name];

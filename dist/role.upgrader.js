@@ -1,5 +1,7 @@
 'use strict';
 
+var targeter = require('targeter');
+
 module.exports = {
 
     /** @param {Creep} creep **/
@@ -22,16 +24,8 @@ module.exports = {
                 creep.moveTo(creep.room.controller, {visualizePathStyle: {stroke: '#ffffff'}});
             }
         } else {
-            var container = creep.pos.findClosestByPath(FIND_STRUCTURES, {
-                filter: (structure) => {
-                    return (
-                        structure.structureType == STRUCTURE_CONTAINER
-                    ) && (
-                        structure.store[RESOURCE_ENERGY] > 0
-                    );
-                }
-            });
-            if(container != null) {
+            let container = targeter.findEnergyWithdrawTarget(creep);
+            if (container != null) {
                 if (creep.withdraw(container, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
                     creep.moveTo(container, {visualizePathStyle: {stroke: '#ffaa00'}});
                 }
