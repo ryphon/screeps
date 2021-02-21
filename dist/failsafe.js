@@ -13,7 +13,7 @@ module.exports = {
                     (
                         s.structureType == STRUCTURE_WALL ||
                         s.structureType == STRUCTURE_RAMPART
-                    ) && wall.hits <= 100
+                    ) && s.hits <= 100
             });
             if (failing.length > 0) {
                 room.controller.activateSafeMode();
