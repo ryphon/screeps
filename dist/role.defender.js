@@ -1,9 +1,16 @@
 'use strict';
 
 module.exports = {
+    /*
+    Until your spawner has resources to make some pretty beefy defenders, these
+    creeps are essentially sacrificial lambs that will hopefully keep invaders away
+    from your other creeps while your tower(s) kill off the invader. They will
+    distribute evenly across any flags you set in the room until they see any hostiles,
+    at which point they will seek them out and attempt to attack.
+    */
     cleanMemory: function(creepName) {
         console.log("Cleaning up flag memory for " + creepName);
-        for (let flagName in Memory.flags) {
+        for (const flagName in Memory.flags) {
             let flag = Memory.flags[flagName];
             if (flag.creeps != null) {
                 let idx = flag.creeps.indexOf(creepName);
@@ -17,7 +24,7 @@ module.exports = {
         if (creep.memory.flagName == null) {
             // Assign creep to a flag
             let flags = creep.room.find(FIND_FLAGS);
-            for (let flag of flags) {
+            for (const flag of flags) {
                 if (flag.memory.creeps == null) {
                     flag.memory.creeps = [];
                 }

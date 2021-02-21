@@ -2,11 +2,16 @@
 var targeter = require('targeter');
 
 module.exports = {
-
     /** @param {Creep} creep **/
     run: function(creep) {
+        if (creep.memory.anchorId == null) {
+            // Assign creep to a source
+            targeter.assignRoundRobinAnchorTarget(
+                creep, FIND_SOURCES, (source) => true
+            )
+        }
 
-        if (creep.store[RESOURCE_ENERGY] == 0) {
+        if (creep.store.getUsedCapacity(RESOURCE_ENERGY) == 0) {
             if (!creep.memory.harvesting) {
                 creep.say('🔄 harvest');
             }
@@ -17,16 +22,26 @@ module.exports = {
         }
 
         if(creep.memory.harvesting) {
-            var source = creep.pos.findClosestByPath(FIND_SOURCES_ACTIVE);
+            let source;
+            if (Memory.roles.harvester.zones) {
+                let link = targeter.findEnergyLinkWithdrawTarget(creep);
+                if (link != null && creep.withdraw(link, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+                    creep.moveTo(link, {visualizePathStyle: {stroke: '#ffaa00'}});
+                    return;
+                }
+                source = Game.getObjectById(creep.memory.anchorId);
+            } else {
+                source = creep.pos.findClosestByPath(FIND_SOURCES_ACTIVE);
+            } 
             if (creep.harvest(source) == ERR_NOT_IN_RANGE) {
                 creep.moveTo(source, {visualizePathStyle: {stroke: '#ffaa00'}});
             }
         } else {
             creep.memory.harvesting = false;
-            var target = targeter.findEnergyStoreTarget(creep);
+            let target = targeter.findEnergyStoreTarget(creep);
             if (target == null) {
-                // If all else fails, go home
-                target = Game.spawns["Spawn1"];
+                creep.say('Going home');
+                target = Game.getObjectById(creep.anchorId);
             }
             if (creep.transfer(target, RESOURCE_ENERGY) != OK || (creep.store.getFreeCapacity() == 0)) {
                 creep.moveTo(target, {visualizePathStyle: {stroke: '#ffffff'}});

@@ -64,6 +64,7 @@ module.exports = {
             "repairer",
             "defender"
         ];
+        Memory.structures = {};
         Memory.initialized = true;
     }
 }
