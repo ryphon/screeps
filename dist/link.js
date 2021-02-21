@@ -1,8 +1,23 @@
 'use strict';
 
 module.exports = {
+    /*
+    Links are all set to 'push' by default. Set one to 'pull' as needed with
+    Memory.structures['<linkId>'].push = false;
+    */
     run: function(room) {
-        const links = room.find(FIND_MY_STRUCTURES, {
+        let links = room.find(FIND_MY_STRUCTURES, {
+            filter: (structure) => structure.structureType == STRUCTURE_LINK
+        });
+        if (Memory.structures == null) {
+            Memory.structures = {};
+        }
+        for (const link of links) {
+            if (Memory.structures[link.id] == null) {
+                Memory.structures[link.id] = {'push': true}
+            }
+        }
+        links = room.find(FIND_MY_STRUCTURES, {
             filter: (structure) => (
                 structure.structureType == STRUCTURE_LINK &&
                 Memory.structures[structure.id].push &&

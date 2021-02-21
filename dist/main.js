@@ -18,7 +18,6 @@ module.exports.loop = function () {
         if(!Game.creeps[name]) {
             const anchorId = creepMemory.anchorId;
             roleDefender.cleanMemory(name);
-            roleHarvester.cleanMemory(name);
             targeter.cleanAnchorMemory(name, anchorId);
             delete Memory.creeps[name];
         }

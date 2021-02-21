@@ -2,18 +2,6 @@
 var targeter = require('targeter');
 
 module.exports = {
-    cleanMemory: function(creepName) {
-        console.log("Cleaning up source memory for " + creepName);
-        for (const sourceName in Memory.sources) {
-            let source = Memory.sources[sourceName];
-            if (source.creeps != null) {
-                let idx = source.creeps.indexOf(creepName);
-                if (idx !== -1) {
-                    source.creeps.splice(idx, 1);
-                }
-            }
-        }
-    },
     /** @param {Creep} creep **/
     run: function(creep) {
         if (creep.memory.anchorId == null) {
