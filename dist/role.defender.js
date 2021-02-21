@@ -3,7 +3,7 @@
 module.exports = {
     cleanMemory: function(creepName) {
         console.log("Cleaning up flag memory for " + creepName);
-        for (let flagName in Memory.flags) {
+        for (const flagName in Memory.flags) {
             let flag = Memory.flags[flagName];
             if (flag.creeps != null) {
                 let idx = flag.creeps.indexOf(creepName);
@@ -17,7 +17,7 @@ module.exports = {
         if (creep.memory.flagName == null) {
             // Assign creep to a flag
             let flags = creep.room.find(FIND_FLAGS);
-            for (let flag of flags) {
+            for (const flag of flags) {
                 if (flag.memory.creeps == null) {
                     flag.memory.creeps = [];
                 }
