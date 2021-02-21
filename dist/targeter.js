@@ -48,12 +48,17 @@ module.exports = {
 
     findRepairTarget(creep) {
         var target;
-        for (let i = 1; i <= 10; i++) {
+        if (Memory.wallHitsGoal == null) {
+            Memory.wallHitsGoal = 100000;
+        }
+        const hitsBucketCount = 10;
+        const hitsBucketSize = Memory.wallHitsGoal / hitsBucketCount;
+        for (let i = 1; i <= hitsBucketCount; i++) {
             // Find nearest repair target by 10% hits buckets
             target = creep.pos.findClosestByPath(FIND_STRUCTURES, {
                 filter: (structure) => (
                     (10*structure.hits/structure.hitsMax) < i &&
-                    (structure.hits < i*10000)
+                    (structure.hits < i*hitsBucketSize)
                 )
             })
             if (target != null) {

@@ -31,11 +31,12 @@ module.exports.loop = function () {
     }
 
     // Run room structures
-    const room = Game.spawns['Spawn1'].room;
-    failsafe.saveMyRoom(room);
-    spawner.run(room);
-    tower.run(room);
-    link.run(room);
+    for (const room of Object.values(Game.rooms)) {
+        failsafe.saveMyRoom(room);
+        spawner.run(room);
+        tower.run(room);
+        link.run(room);
+    }
 
     // Task creeps
     for(const creep of Object.values(Game.creeps)) {
