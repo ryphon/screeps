@@ -4,7 +4,7 @@ module.exports = {
     cleanAnchorMemory: function(creepName, anchorId) {
         console.log("Cleaning up anchor memory for " + creepName);
         const anchor = Memory.anchors[anchorId];
-        if (anchor.creeps != null) {
+        if (anchor != null && anchor.creeps != null) {
             const idx = anchor.creeps.indexOf(creepName);
             if (idx !== -1) {
                 anchor.creeps.splice(idx, 1);
