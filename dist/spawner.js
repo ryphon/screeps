@@ -1,6 +1,21 @@
 'use strict';
 
 module.exports = {
+    /*
+    Spawner is driven by in-memory configuration. When evaluating what to spawn,
+    if anything, it will prioritize:
+    1) anything in Memory.spawnQueue,
+    2) any role with creep count below Memory.role.X.minimumCount, in order of
+        Memory.roleNamesByPriority
+    3) any role with creep count below Memory.role.X.desiredCount, in order of
+        Memory.roleNamesByPriority
+
+    If there is anything in the spawn queue, it will try to spawn that. If there
+    is any role under its minimumCount, it will spawn a new creep with the body
+    parts listed in Memory.role.X.bodyParts[1]. Lastly, if there is a role under
+    its desiredCount, it will spawn a new creep with the body parts listed in
+    Memory.role.X.bodyParts[0].
+    */
     run: function(room) {
         const spawns = room.find(FIND_MY_SPAWNS);
         for (const spawn of spawns) {
