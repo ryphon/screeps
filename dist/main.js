@@ -14,13 +14,13 @@ var link = require('link');
 module.exports.loop = function () {
 
     // Memory management
-    for(var name in Memory.creeps) {
+    for(const [name, creepMemory] of Object.entries(Memory.creeps)) {
         if(!Game.creeps[name]) {
-            delete Memory.creeps[name];
+            const anchorId = creepMemory.anchorId;
             roleDefender.cleanMemory(name);
             roleHarvester.cleanMemory(name);
-            targeter.cleanAnchorMemory(name);
-            //console.log('Clearing non-existing creep memory:', name);
+            targeter.cleanAnchorMemory(name, anchorId);
+            delete Memory.creeps[name];
         }
     }
 

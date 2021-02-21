@@ -1,15 +1,13 @@
 'use strict';
 
 module.exports = {
-    cleanAnchorMemory: function(creepName) {
+    cleanAnchorMemory: function(creepName, anchorId) {
         console.log("Cleaning up anchor memory for " + creepName);
-        for (const objId in Memory.anchors) {
-            const anchor = Memory.anchors[objId];
-            if (anchor.creeps != null) {
-                const idx = anchor.creeps.indexOf(creepName);
-                if (idx !== -1) {
-                    anchor.creeps.splice(idx, 1);
-                }
+        const anchor = Memory.anchors[anchorId];
+        if (anchor.creeps != null) {
+            const idx = anchor.creeps.indexOf(creepName);
+            if (idx !== -1) {
+                anchor.creeps.splice(idx, 1);
             }
         }
     },
