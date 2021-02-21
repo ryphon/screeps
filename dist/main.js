@@ -38,7 +38,7 @@ module.exports.loop = function () {
     link.run(room);
 
     // Task creeps
-    for(const creep of Game.creeps) {
+    for(const creep of Object.values(Game.creeps)) {
         if(creep.memory.role == 'harvester') {
             roleHarvester.run(creep);
         }
