@@ -6,6 +6,14 @@ module.exports = {
 
     /** @param {Creep} creep **/
     run: function(creep) {
+        if (creep.memory.anchorId == null) {
+            // Assign creep to an anchor
+            targeter.assignRoundRobinAnchorTarget(
+                creep, FIND_MY_STRUCTURES, (structure) => (
+                    structure.structureType == STRUCTURE_SPAWN
+                )
+            )
+        }
 
 	    if(creep.store[RESOURCE_ENERGY] == 0) {
             creep.memory.repairing = false;
@@ -33,7 +41,8 @@ module.exports = {
                 }
             } else {
                 // If all else fails, go home
-                target = Game.spawns['Spawn1'];
+                creep.say('Going home');
+                target = Game.getObjectById(creep.anchorId);
                 creep.moveTo(target, {visualizePathStyle: {stroke: '#0fffff'}});
             }
         } else {

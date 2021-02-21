@@ -6,6 +6,14 @@ module.exports = {
 
     /** @param {Creep} creep **/
     run: function(creep) {
+        if (creep.memory.anchorId == null) {
+            // Assign creep to an anchor
+            targeter.assignRoundRobinAnchorTarget(
+                creep, FIND_STRUCTURES, (structure) => (
+                    structure.structureType == STRUCTURE_CONTROLLER
+                )
+            )
+        }
 
         if(creep.store[RESOURCE_ENERGY] == 0) {
             if (creep.memory.building) {

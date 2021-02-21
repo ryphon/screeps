@@ -16,25 +16,14 @@ module.exports = {
     },
     /** @param {Creep} creep **/
     run: function(creep) {
-        if (creep.memory.sourceId == null) {
+        if (creep.memory.anchorId == null) {
             // Assign creep to a source
-            const sources = creep.room.find(FIND_SOURCES);
-            if (Memory.sources == null) {
-                console.log("Initializing sources memory");
-                Memory.sources = sources.reduce((res, source) => {
-                    res[source.id] = {'creeps': []};
-                    return res;
-                }, {})
-            }
-            const minSource = sources.reduce((res, source) =>
-                (Memory.sources[source.id].creeps.length < Memory.sources[res.id].creeps.length) ? source : res
-            );
-            Memory.sources[minSource.id].creeps.push(creep.name);
-            creep.memory.sourceId = minSource.id;
-            console.log(creep.name + " assigned to source " + minSource.id);
+            targeter.assignRoundRobinAnchorTarget(
+                creep, FIND_SOURCES, (source) => true
+            )
         }
 
-        if (creep.store[RESOURCE_ENERGY] == 0) {
+        if (creep.store.getUsedCapacity(RESOURCE_ENERGY) == 0) {
             if (!creep.memory.harvesting) {
                 creep.say('🔄 harvest');
             }
@@ -45,25 +34,26 @@ module.exports = {
         }
 
         if(creep.memory.harvesting) {
+            let source;
             if (Memory.roles.harvester.zones) {
-                var withdraw = targeter.findEnergyLinkWithdrawTarget(creep);
-                if (withdraw != null && creep.withdraw(withdraw, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                    creep.moveTo(withdraw, {visualizePathStyle: {stroke: '#ffaa00'}});
+                let link = targeter.findEnergyLinkWithdrawTarget(creep);
+                if (link != null && creep.withdraw(link, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+                    creep.moveTo(link, {visualizePathStyle: {stroke: '#ffaa00'}});
                     return;
                 }
-                var source = Game.getObjectById(creep.memory.sourceId);
+                source = Game.getObjectById(creep.memory.anchorId);
             } else {
-                var source = creep.pos.findClosestByPath(FIND_SOURCES_ACTIVE);
+                source = creep.pos.findClosestByPath(FIND_SOURCES_ACTIVE);
             } 
             if (creep.harvest(source) == ERR_NOT_IN_RANGE) {
                 creep.moveTo(source, {visualizePathStyle: {stroke: '#ffaa00'}});
             }
         } else {
             creep.memory.harvesting = false;
-            var target = targeter.findEnergyStoreTarget(creep);
+            let target = targeter.findEnergyStoreTarget(creep);
             if (target == null) {
-                // If all else fails, go home
-                target = Game.spawns["Spawn1"];
+                creep.say('Going home');
+                target = Game.getObjectById(creep.anchorId);
             }
             if (creep.transfer(target, RESOURCE_ENERGY) != OK || (creep.store.getFreeCapacity() == 0)) {
                 creep.moveTo(target, {visualizePathStyle: {stroke: '#ffffff'}});

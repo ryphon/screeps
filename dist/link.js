@@ -1,8 +1,7 @@
 'use strict';
 
 module.exports = {
-    run: function() {
-        var room = Game.spawns['Spawn1'].room;
+    run: function(room) {
         const links = room.find(FIND_MY_STRUCTURES, {
             filter: (structure) => (
                 structure.structureType == STRUCTURE_LINK &&
@@ -11,7 +10,7 @@ module.exports = {
             )
         });
         for (const link of links) {
-            let targets = link.room.find(FIND_MY_STRUCTURES, {
+            const targets = link.room.find(FIND_MY_STRUCTURES, {
                 filter: (structure) => (
                     structure.structureType == STRUCTURE_LINK &&
                     !Memory.structures[structure.id].push &&
