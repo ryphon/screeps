@@ -3,8 +3,7 @@
 module.exports = {
     run: function() {
         console.log("Bootstrap initialization triggered");
-        if (Memory.initialized != true) {
-            // We really only want this at begining of game
+        if (Memory.spawnQueue == null) {
             Memory.spawnQueue = [
                 [[WORK, CARRY, MOVE], "Harvester1",  { memory: { role: 'harvester'}}],
                 [[WORK, CARRY, MOVE], "Harvester2",  { memory: { role: 'harvester' }}],
@@ -70,6 +69,9 @@ module.exports = {
         ];
         if (Memory.structures == null) {
             Memory.structures = {};
+        }
+        if (Memory.wallHitsGoal == null) {
+            Memory.wallHitsGoal = 50000;
         }
         Memory.initialized = true;
     }
