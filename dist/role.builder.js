@@ -39,7 +39,7 @@ module.exports = {
                     }
                 } else {
                     creep.say('Going home');
-                    target = Game.getObjectById(creep.anchorId);
+                    target = Game.getObjectById(creep.memory.anchorId);
                     creep.moveTo(target, {visualizePathStyle: {stroke: '#ffffff'}});
                 }
             }

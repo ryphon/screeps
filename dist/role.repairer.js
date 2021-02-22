@@ -27,9 +27,12 @@ module.exports = {
 	    if(creep.memory.repairing) {
             if (creep.memory.repairTarget != null) {
                 target = Game.getObjectById(creep.memory.repairTarget);
-                if (target != null && target.hits == target.hitsMax) {
-                    target = null;
-                    creep.memory.repairTarget = null;
+                if (target != null) {
+                    creep.memory.repairTarget = target.id;
+                    if (target.hits == target.hitsMax) {
+                        target = null;
+                        creep.memory.repairTarget = null;
+                    }
                 }
             }
             if (target == null) {
@@ -42,7 +45,7 @@ module.exports = {
             } else {
                 // If all else fails, go home
                 creep.say('Going home');
-                target = Game.getObjectById(creep.anchorId);
+                target = Game.getObjectById(creep.memory.anchorId);
                 creep.moveTo(target, {visualizePathStyle: {stroke: '#0fffff'}});
             }
         } else {
