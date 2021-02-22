@@ -145,7 +145,7 @@ module.exports = {
         target = creep.pos.findClosestByPath(inRange, {
             filter: (structure) => (
                 structure.structureType == STRUCTURE_TOWER &&
-                structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0
+                structure.store.getFreeCapacity(RESOURCE_ENERGY) > 500
             )
         }, inRange);
         if (target == null) {

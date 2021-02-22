@@ -3,18 +3,22 @@
 module.exports = {
     run: function() {
         console.log("Bootstrap initialization triggered");
-        Memory.spawnQueue = [
-            [[WORK, CARRY, MOVE], "Harvester1",  { memory: { role: 'harvester'}}],
-            [[WORK, CARRY, MOVE], "Harvester2",  { memory: { role: 'harvester' }}],
-            [[WORK, CARRY, MOVE], "Upgrader1",  { memory: { role: 'upgrader' }}],
-            [[WORK, CARRY, MOVE], "Upgrader2",  { memory: { role: 'upgrader' }}],
-            [[WORK, CARRY, MOVE], "Builder1",  { memory: { role: 'builder' }}],
-            [[WORK, CARRY, MOVE], "Builder2",  { memory: { role: 'builder' }}],
-            [[WORK, CARRY, MOVE], "Builder3",  { memory: { role: 'builder' }}],
-            [[WORK, CARRY, MOVE], "Builder4",  { memory: { role: 'builder' }}],
-            [[WORK, CARRY, MOVE], "Builder5",  { memory: { role: 'builder' }}],
-            [[WORK, CARRY, MOVE], "Builder6",  { memory: { role: 'builder' }}],
-        ];
+        if (Memory.initialized != true) {
+            // We really only want this at begining of game
+            Memory.spawnQueue = [
+                [[WORK, CARRY, MOVE], "Harvester1",  { memory: { role: 'harvester'}}],
+                [[WORK, CARRY, MOVE], "Harvester2",  { memory: { role: 'harvester' }}],
+                [[WORK, CARRY, MOVE], "Upgrader1",  { memory: { role: 'upgrader' }}],
+                [[WORK, CARRY, MOVE], "Upgrader2",  { memory: { role: 'upgrader' }}],
+                [[WORK, CARRY, MOVE], "Builder1",  { memory: { role: 'builder' }}],
+                [[WORK, CARRY, MOVE], "Builder2",  { memory: { role: 'builder' }}],
+                [[WORK, CARRY, MOVE], "Builder3",  { memory: { role: 'builder' }}],
+                [[WORK, CARRY, MOVE], "Builder4",  { memory: { role: 'builder' }}],
+                [[WORK, CARRY, MOVE], "Builder5",  { memory: { role: 'builder' }}],
+                [[WORK, CARRY, MOVE], "Builder6",  { memory: { role: 'builder' }}],
+            ];
+
+        }
         Memory.roles = {
             "harvester": {
                 "minimumCount": 2,
@@ -41,8 +45,8 @@ module.exports = {
                 ]
             },
             "builder": {
-                "minimumCount": 6,
-                "desiredCount": 8,
+                "minimumCount": 2,
+                "desiredCount": 4,
                 "bodyParts": [
                     [WORK,WORK,WORK,CARRY,CARRY,MOVE,MOVE],
                     [WORK, CARRY, MOVE]
@@ -64,7 +68,9 @@ module.exports = {
             "repairer",
             "defender"
         ];
-        Memory.structures = {};
+        if (Memory.structures == null) {
+            Memory.structures = {};
+        }
         Memory.initialized = true;
     }
 }

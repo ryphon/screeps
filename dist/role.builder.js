@@ -15,17 +15,17 @@ module.exports = {
             )
         }
 
-	    if(creep.store[RESOURCE_ENERGY] == 0) {
+        if(creep.store[RESOURCE_ENERGY] == 0) {
             if (creep.memory.building) {
                 creep.say('🔄 withdraw');
             }
             creep.memory.building = false;
-	    } else if(!creep.memory.building && creep.store.getFreeCapacity() == 0) {
-	        creep.memory.building = true;
-	        creep.say('🚧 build');
-	    }
+        } else if(!creep.memory.building && creep.store.getFreeCapacity() == 0) {
+            creep.memory.building = true;
+            creep.say('🚧 build');
+        }
 
-	    if(creep.memory.building) {
+        if(creep.memory.building) {
             var target = targeter.findBuildTarget(creep);
             if(target != null) {
                 if(creep.build(target) == ERR_NOT_IN_RANGE) {
@@ -43,7 +43,7 @@ module.exports = {
                     creep.moveTo(target, {visualizePathStyle: {stroke: '#ffffff'}});
                 }
             }
-	    } else {
+        } else {
             let container = targeter.findEnergyWithdrawTarget(creep);
             if(container != null) {
                 if (creep.withdraw(container, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
@@ -55,6 +55,6 @@ module.exports = {
                     creep.moveTo(source, {visualizePathStyle: {stroke: '#ffaa00'}});
                 }
             }
-	    }
-	}
+        }
+    }
 };

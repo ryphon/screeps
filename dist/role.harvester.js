@@ -6,14 +6,14 @@ module.exports = {
     Harvesters harvest energy from sources and dump it in containers that can hold energy.
     Harvesters operate in two behavior modes:
 
-    1) free-range. When Memory.roles.harvester.zones != true, harvesters will seek out the
+    1) free-range. When room.memory.roles.harvester.zones != true, harvesters will seek out the
     nearest available source to pull energy from. This tends to work well early game.
 
-    2) zones. When Memory.roles.harvester == true, harvesters will only harvest energy from
+    2) zones. When room.memory.roles.harvester == true, harvesters will only harvest energy from
     their source or the nearest link to their source if the link is set to 'pull' mode.
     Harvesters will then fill structures starting nearest to the source. You can limit the
     range from the source that a harvester will go to fill a source by setting
-    Memory.roles.harvesters.zoneRange to a number.
+    room.memory.roles.harvesters.zoneRange to a number.
     */
     /** @param {Creep} creep **/
     run: function(creep) {
@@ -36,7 +36,7 @@ module.exports = {
 
         if(creep.memory.harvesting) {
             let source;
-            if (Memory.roles.harvester.zones) {
+            if (creep.room.memory.roles.harvester.zones) {
                 let link = targeter.findEnergyLinkWithdrawTarget(creep);
                 if (link != null && creep.withdraw(link, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
                     creep.moveTo(link, {visualizePathStyle: {stroke: '#ffaa00'}});
@@ -56,8 +56,8 @@ module.exports = {
         } else {
             creep.memory.harvesting = false;
             let target;
-            if (Memory.roles.harvester.zones && Memory.roles.harvester.zoneRange != null) {
-                target = targeter.findEnergyStoreTargetInRange(creep, Memory.roles.harvester.zoneRange);
+            if (creep.room.memory.roles.harvester.zones && creep.room.memory.roles.harvester.zoneRange != null) {
+                target = targeter.findEnergyStoreTargetInRange(creep, creep.room.memory.roles.harvester.zoneRange);
             } else {
                 target = targeter.findEnergyStoreTarget(creep);
             }
