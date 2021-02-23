@@ -28,6 +28,13 @@ module.exports = {
 	    }
 
 	    if(creep.memory.upgrading) {
+            if (creep.memory.claim != null && creep.room.name != creep.memory.claim.roomName) {
+                // If we're claiming a new room, special short-circuit:
+                // Once they're full of energy, book it to a new room and get busy
+                creep.say('NEW ROOM!!');
+                creep.moveTo(Game.rooms[creep.memory.claim.roomName].controller, {visualizePathStyle: {stroke: '#ffff00'}});
+                return;
+            }
             if(creep.upgradeController(creep.room.controller) == ERR_NOT_IN_RANGE) {
                 creep.moveTo(creep.room.controller, {visualizePathStyle: {stroke: '#ffffff'}});
             }

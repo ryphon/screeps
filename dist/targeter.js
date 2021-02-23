@@ -71,35 +71,25 @@ module.exports = {
 
     findBuildTarget(creep) {
         return creep.pos.findClosestByPath(FIND_CONSTRUCTION_SITES);
-
     },
 
     findEnergyStoreTarget(creep) {
-        let target;
+        let target = creep.pos.findClosestByPath(FIND_STRUCTURES, {
+            filter: (structure) => (
+                structure.structureType == STRUCTURE_TOWER &&
+                structure.store.getFreeCapacity(RESOURCE_ENERGY) > structure.store.getUsedCapacity(RESOURCE_ENERGY)
+            )
+        });
+        // Only look at the nearest link to their anchor, check if it has capacity and is a push link
         if (target == null) {
-            target = creep.pos.findClosestByPath(FIND_STRUCTURES, {
-                filter: (structure) => (
-                    structure.structureType == STRUCTURE_TOWER &&
-                    structure.store.getFreeCapacity(RESOURCE_ENERGY) > structure.store.getUsedCapacity(RESOURCE_ENERGY)
-                )
-            });
-        }
-        // Look at the nearest link to their anchor first, check if it has capacity and is a push link
-        if (creep.memory.anchorId != null) {
-            target = Game.getObjectById(creep.memory.anchorId).pos.findClosestByPath(FIND_MY_STRUCTURES, {
-                filter: (structure) => (structure.structureType == STRUCTURE_LINK)
-            });
-            if (target != null && (!Memory.structures[target.id].push || target.store.getFreeCapacity(RESOURCE_ENERGY) == 0)) {
-                target = null;
+            if (creep.memory.anchorId != null) {
+                target = Game.getObjectById(creep.memory.anchorId).pos.findClosestByPath(FIND_MY_STRUCTURES, {
+                    filter: (structure) => (structure.structureType == STRUCTURE_LINK)
+                });
+                if (target != null && (!Memory.structures[target.id].push || target.store.getFreeCapacity(RESOURCE_ENERGY) == 0)) {
+                    target = null;
+                }
             }
-        }
-        if (target == null) {
-            target = creep.pos.findClosestByPath(FIND_STRUCTURES, {
-                filter: (structure) => (
-                    structure.structureType == STRUCTURE_SPAWN &&
-                    structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0
-                )
-            });
         }
         if (target == null) {
             target = creep.pos.findClosestByPath(FIND_STRUCTURES, {
@@ -113,6 +103,14 @@ module.exports = {
             target = creep.pos.findClosestByPath(FIND_STRUCTURES, {
                 filter: (structure) => (
                     structure.structureType == STRUCTURE_EXTENSION &&
+                    structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0
+                )
+            });
+        }
+        if (target == null) {
+            target = creep.pos.findClosestByPath(FIND_STRUCTURES, {
+                filter: (structure) => (
+                    structure.structureType == STRUCTURE_SPAWN &&
                     structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0
                 )
             });
@@ -145,7 +143,7 @@ module.exports = {
         target = creep.pos.findClosestByPath(inRange, {
             filter: (structure) => (
                 structure.structureType == STRUCTURE_TOWER &&
-                structure.store.getFreeCapacity(RESOURCE_ENERGY) > 500
+                structure.store.getFreeCapacity(RESOURCE_ENERGY) > 100
             )
         }, inRange);
         if (target == null) {
@@ -203,7 +201,7 @@ module.exports = {
                     structure.structureType == STRUCTURE_LINK
                 )
             });
-            if (!Memory.structures[link.id].push && link.store.getUsedCapacity(RESOURCE_ENERGY) > 0) {
+            if (link != null && !Memory.structures[link.id].push && link.store.getUsedCapacity(RESOURCE_ENERGY) > 0) {
                 return link;
             }
         }

@@ -30,16 +30,19 @@ module.exports = {
         // Check for creep in spawn queue
         let spawnCreep;
         if (room.memory.spawnQueue.length > 0) {
-            spawnCreep = room.memory.spawnQueue.shift();
-            console.log(room.name + " attempting to spawn creep from queue: " + spawnCreep[1]);
-            if (
-                spawn.spawnCreep(
-                    spawnCreep[0],
-                    spawnCreep[1],
-                    spawnCreep[2]
-                ) != 0
-            ) {
-                room.memory.spawnQueue.unshift(spawnCreep);
+            const spawns = room.find(FIND_MY_SPAWNS);
+            for (const spawn of spawns) {
+                if (!spawn.spawning) {
+                    // Spawn desired creep, if any
+                    spawnCreep = room.memory.spawnQueue.shift();
+                    console.log(room.name + " attempting to spawn creep from queue: " + spawnCreep[1]);
+                    if (spawnCreep != null) {
+                        if ( spawn.spawnCreep(spawnCreep[0], spawnCreep[1], spawnCreep[2]) == 0) {
+                            break;
+                        }
+                    }
+                    room.memory.spawnQueue.unshift(spawnCreep);
+                }
             }
         } else {
             // Check for role below minimum count
@@ -51,7 +54,7 @@ module.exports = {
                     creep.room.name == room.name &&
                     creep.memory.role == roleName
                 )}).length
-                console.log(room.name + " - " + roleName + " - " + creepCounts[roleName] + " of Minimum: " + role.minimumCount + ", Desired: " + role.desiredCount);
+                // console.log(room.name + " - " + roleName + " - " + creepCounts[roleName] + " of Minimum: " + role.minimumCount + ", Desired: " + role.desiredCount);
                 if (creepCounts[roleName] < role.minimumCount) {
                     spawnCreep = [role.bodyParts[1], roleName + Game.time, {"memory":{"role":roleName}}]
                     console.log(room.name + " attempting to spawn creep for minimum role: " + roleName);
