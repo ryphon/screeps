@@ -29,15 +29,16 @@ module.exports = {
         }
         // Check for creep in spawn queue
         let spawnCreep;
+        let spawnLog;
         if (room.memory.spawnQueue.length > 0) {
             const spawns = room.find(FIND_MY_SPAWNS);
             for (const spawn of spawns) {
                 if (!spawn.spawning) {
                     // Spawn desired creep, if any
                     spawnCreep = room.memory.spawnQueue.shift();
-                    console.log(room.name + " attempting to spawn creep from queue: " + spawnCreep[1]);
                     if (spawnCreep != null) {
                         if ( spawn.spawnCreep(spawnCreep[0], spawnCreep[1], spawnCreep[2]) == 0) {
+                            console.log(room.name + " spawning creep from queue: " + spawnCreep[1]);
                             break;
                         }
                     }
@@ -57,7 +58,7 @@ module.exports = {
                 // console.log(room.name + " - " + roleName + " - " + creepCounts[roleName] + " of Minimum: " + role.minimumCount + ", Desired: " + role.desiredCount);
                 if (creepCounts[roleName] < role.minimumCount) {
                     spawnCreep = [role.bodyParts[1], roleName + Game.time, {"memory":{"role":roleName}}]
-                    console.log(room.name + " attempting to spawn creep for minimum role: " + roleName);
+                    spawnLog = room.name + " spawning creep for minimum role: " + roleName;
                     break;
                 }
             }
@@ -67,7 +68,7 @@ module.exports = {
                     const role = room.memory.roles[roleName];
                     if (creepCounts[roleName] < role.desiredCount) {
                         spawnCreep = [role.bodyParts[0], roleName + Game.time, {"memory":{"role":roleName}}]
-                        console.log(room.name + " attempting to spawn creep for desired role: " + roleName);
+                        spawnLog = room.name + " spawning creep for desired role: " + roleName;
                         break;
                     }
                 }
@@ -77,12 +78,10 @@ module.exports = {
         for (const spawn of spawns) {
             if (!spawn.spawning && spawnCreep != null) {
                 // Spawn desired creep, if any
-                spawn.spawnCreep(
-                    spawnCreep[0],
-                    spawnCreep[1],
-                    spawnCreep[2]
-                );
-                break;
+                if (spawn.spawnCreep( spawnCreep[0], spawnCreep[1], spawnCreep[2]) == OK) {
+                    console.log(spawnLog);
+                    break;
+                }
             }
         }
         for (const spawn of spawns) {

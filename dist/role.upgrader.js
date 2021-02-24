@@ -16,18 +16,18 @@ module.exports = {
         }
 
         if(creep.store[RESOURCE_ENERGY] == 0) {
-            if (creep.memory.building) {
-                creep.say('🔄 withdraw');
+            if (creep.memory.upgrading) {
+                creep.say('⛽ charge');
             }
             creep.memory.upgrading = false;
-	    }
-	    
-	    if(!creep.memory.upgrading && creep.store.getFreeCapacity() == 0) {
-	        creep.memory.upgrading = true;
-	        creep.say('⚡ upgrade');
-	    }
+        }
+        
+        if(!creep.memory.upgrading && creep.store.getFreeCapacity() == 0) {
+            creep.memory.upgrading = true;
+            creep.say('⚡ upgrade');
+        }
 
-	    if(creep.memory.upgrading) {
+        if(creep.memory.upgrading) {
             if (creep.memory.claim != null && creep.room.name != creep.memory.claim.roomName) {
                 // If we're claiming a new room, special short-circuit:
                 // Once they're full of energy, book it to a new room and get busy
@@ -51,5 +51,5 @@ module.exports = {
                 }
             }
         }
-	}
+    }
 };

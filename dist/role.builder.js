@@ -17,7 +17,7 @@ module.exports = {
 
         if(creep.store[RESOURCE_ENERGY] == 0) {
             if (creep.memory.building) {
-                creep.say('🔄 withdraw');
+                creep.say('⛽ charge');
             }
             creep.memory.building = false;
         } else if(!creep.memory.building && creep.store.getFreeCapacity() == 0) {

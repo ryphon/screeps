@@ -37,7 +37,11 @@ module.exports = {
             console.log(creep.name + " assigned to flag " + minFlag.name);
         }
 
+        // const hostiles = creep.room.find(FIND_HOSTILE_CREEPS);
         let nearestHostile = creep.pos.findClosestByPath(FIND_HOSTILE_CREEPS);
+        // if (nearestHostile == null && hostiles.length > 0) {
+        //     nearestHostile = hostiles[0];
+        // }
         if (nearestHostile != null) {
             let res = creep.rangedAttack(nearestHostile);
             if (res == ERR_NOT_IN_RANGE) {

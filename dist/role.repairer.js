@@ -17,7 +17,7 @@ module.exports = {
 
 	    if(creep.store[RESOURCE_ENERGY] == 0) {
             creep.memory.repairing = false;
-            creep.say('🔄 withdraw');
+            creep.say('⛽ charge');
 	    } else if(!creep.memory.repair && creep.store.getFreeCapacity() == 0) {
             creep.memory.repairTarget = null;
 	        creep.memory.repairing = true;
@@ -43,10 +43,17 @@ module.exports = {
                     creep.moveTo(target, {visualizePathStyle: {stroke: '#0fffff'}});
                 }
             } else {
-                // If all else fails, go home
-                creep.say('Going home');
-                target = Game.getObjectById(creep.memory.anchorId);
-                creep.moveTo(target, {visualizePathStyle: {stroke: '#0fffff'}});
+                target = targeter.findBuildTarget(creep);
+                if(target != null) {
+                    if(creep.build(target) == ERR_NOT_IN_RANGE) {
+                        creep.moveTo(target, {visualizePathStyle: {stroke: '#ffffff'}});
+                    }
+                } else {
+                    // If all else fails, go home
+                    creep.say('Going home');
+                    target = Game.getObjectById(creep.memory.anchorId);
+                    creep.moveTo(target, {visualizePathStyle: {stroke: '#0fffff'}});
+                }
             }
         } else {
             let container = targeter.findEnergyWithdrawTarget(creep);

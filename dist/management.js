@@ -1,6 +1,10 @@
 var spawnCounter = 0;
 
 module.exports = {
+    /*
+     * These are convenience scripts to be called from the console.
+     * i.e. call spawnStatus like `> require('management').spawnStatus(Game.rooms['E42S27'])`
+     */
     spawnStatus: function(room) {
         var creepCounts = {};
         for (const roleName of room.memory.roleNamesByPriority) {
@@ -21,11 +25,11 @@ module.exports = {
 
     executeClaim(fromRoomName, toRoomName) {
         /* UNTESTED!!
-        This script can be executed to attempt at claiming an uncontested neutral room
-        To use:
-        - Set a flag where you would like a defender to go anchor or let the script create one on the room controller.
-        - Run `require('management').executeClaim('<room-to-claim-from>', '<the-room-you-want>')`
-        */
+         * This script can be executed to attempt at claiming an uncontested neutral room
+         * To use:
+         * - Set a flag where you would like a defender to go anchor or let the script create one on the room controller.
+         * - Run `require('management').executeClaim('<room-to-claim-from>', '<the-room-you-want>')`
+         roleSummary*/
         const fromRoom = Game.rooms[fromRoomName];
         const toRoom = Game.rooms[toRoomName];
         fromRoom.memory.claim = {

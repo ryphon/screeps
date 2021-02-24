@@ -54,6 +54,13 @@ module.exports = {
                 creep.moveTo(source, {visualizePathStyle: {stroke: '#ffaa00'}});
             }
         } else {
+            if (creep.memory.claim != null && creep.room.name != creep.memory.claim.roomName) {
+                // If we're claiming a new room, special short-circuit:
+                // Once they're full of energy, book it to a new room and get busy
+                creep.say('NEW ROOM!!');
+                creep.moveTo(Game.rooms[creep.memory.claim.roomName].controller, {visualizePathStyle: {stroke: '#f    fff00'}});
+                return;
+            }
             creep.memory.harvesting = false;
             let target;
             if (creep.room.memory.roles.harvester.zones && creep.room.memory.roles.harvester.zoneRange != null) {
@@ -63,9 +70,9 @@ module.exports = {
             }
             if (target == null) {
                 creep.say('Going home');
-                target = Game.getObjectById(creep.anchorId);
+                target = Game.getObjectById(creep.memory.anchorId);
             }
-            if (creep.transfer(target, RESOURCE_ENERGY) != OK || (creep.store.getFreeCapacity() == 0)) {
+            if (creep.transfer(target, RESOURCE_ENERGY) != OK) {
                 creep.moveTo(target, {visualizePathStyle: {stroke: '#ffffff'}});
             }
         }
