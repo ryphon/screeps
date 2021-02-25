@@ -26,21 +26,7 @@ module.exports = {
             creep.say('♲ distribute');
         }
 
-        if(!creep.memory.distributing) {
-            const link = targeter.findEnergyLinkWithdrawTarget(creep);
-            if (link != null && creep.withdraw(link, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                creep.moveTo(link, {visualizePathStyle: {stroke: '#ffaa00'}});
-                return;
-            }
-            let target = targeter.findEnergyWithdrawTarget(creep);
-            if (target == null) {
-                creep.say('Going home');
-                target = Game.getObjectById(creep.memory.anchorId);
-            }
-            if (creep.withdraw(target, RESOURCE_ENERGY) != OK) {
-                creep.moveTo(target, {visualizePathStyle: {stroke: '#ffaa00'}});
-            }
-        } else {
+        if(creep.memory.distributing) {
             if (creep.memory.claim != null && creep.room.name != creep.memory.claim.roomName) {
                 // If we're claiming a new room, special short-circuit:
                 // Once they're full of energy, book it to a new room and get busy
@@ -50,13 +36,38 @@ module.exports = {
             }
             let target;
             target = targeter.findEnergyDistributeTarget(creep);
+            if (target != null) {
+                if (creep.transfer(target, RESOURCE_ENERGY) != OK) {
+                    creep.moveTo(target, {visualizePathStyle: {stroke: '#ffffff'}});
+                }
+            } else {
+                creep.say('Going home');
+                target = Game.getObjectById(creep.memory.anchorId);
+                creep.moveTo(target, {visualizePathStyle: {stroke: '#ffffff'}});
+            }
+        } else {
+            // Prioritize pull link
+            const link = targeter.findEnergyLinkWithdrawTarget(creep);
+            if (link != null && creep.withdraw(link, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+                creep.moveTo(link, {visualizePathStyle: {stroke: '#ffaa00'}});
+                return;
+            }
+            // Next prioritize anchor container/storage
+            const anchor = Game.getObjectById(creep.memory.anchorId);
+            let target = anchor;
+            if (target.store.getUsedCapacity(RESOURCE_ENERGY) == 0) {
+                // If anchor empty, find alternative
+                target = targeter.findEnergyWithdrawTarget(creep);
+            }
+            // Lastly, if no alternatives, just go to anchor anyway
             if (target == null) {
                 creep.say('Going home');
-                target = Game.getObjectById(creep.anchorId);
+                target = Game.getObjectById(creep.memory.anchorId);
             }
-            if (creep.transfer(target, RESOURCE_ENERGY) != OK) {
-                creep.moveTo(target, {visualizePathStyle: {stroke: '#ffffff'}});
+            if (creep.withdraw(target, RESOURCE_ENERGY) != OK) {
+                creep.moveTo(target, {visualizePathStyle: {stroke: '#ffaa00'}});
             }
         }
     }
+        
 };

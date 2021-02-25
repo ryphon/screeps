@@ -12,7 +12,10 @@ module.exports = {
         }
     },
 
-    assignRoundRobinAnchorTarget(creep, findType, filterFunc) {
+    assignRoundRobinAnchorTarget(creep, findType, filterFunc, room=null) {
+        if (room == null) {
+            room = creep.room
+        }
         // Assign creep an anchor object
         // Init anchors memory as needed
         if (Memory.anchors == null) {
@@ -75,9 +78,12 @@ module.exports = {
     },
 
     findEnergyStoreTarget(creep) {
-        let target = this.findEnergyDistributeTarget(creep);
-        if (target != null) {
-            return target
+        let target;
+        if (creep.room.memory.roles[creep.memory.role].distribute != false) {
+            target = this.findEnergyDistributeTarget(creep);
+            if (target != null) {
+                return target
+            }
         }
         return findTargetByPathByType(creep, FIND_STRUCTURES, [STRUCTURE_STORAGE, STRUCTURE_CONTAINER]);
     },
@@ -88,55 +94,43 @@ module.exports = {
         let inRange = anchor.pos.findInRange(FIND_STRUCTURES, range, {
             filter: (structure) => structure.store != null
         });
-        target = creep.pos.findClosestByPath(inRange, {
-            filter: (structure) => (
-                structure.structureType == STRUCTURE_TOWER &&
-                structure.store.getFreeCapacity(RESOURCE_ENERGY) > 100
-            )
-        });
-        if (target == null) {
-            // Only look at the nearest link to their anchor, check if it has capacity and is a push link
-            if (creep.memory.anchorId != null) {
-                target = Game.getObjectById(creep.memory.anchorId).pos.findClosestByPath(FIND_MY_STRUCTURES, {
-                    filter: (structure) => (structure.structureType == STRUCTURE_LINK)
-                });
-                if (target != null && (!Memory.structures[target.id].push || target.store.getFreeCapacity(RESOURCE_ENERGY) == 0)) {
-                    target = null;
-                }
+        if (creep.room.memory.roles[creep.memory.role].distribute != false) {
+            target = creep.pos.findClosestByPath(inRange, {
+                filter: (structure) => (
+                    structure.structureType == STRUCTURE_TOWER &&
+                    structure.store.getFreeCapacity(RESOURCE_ENERGY) > 100
+                )
+            });
+            if (target != null) {
+                return target;
             }
         }
-        return findTargetByPathByType(creep, inRange, [STRUCTURE_SPAWN, STRUCTURE_EXTENSION, STRUCTURE_STORAGE, STRUCTURE_CONTAINER]);
+        target = findNearestLinkIfPush(creep, true);
+        if (target != null) {
+            return target;
+        }
+        if (creep.room.memory.roles[creep.memory.role].distribute != false) {
+            return findTargetByPathByType(creep, inRange, [STRUCTURE_SPAWN, STRUCTURE_EXTENSION, STRUCTURE_STORAGE, STRUCTURE_CONTAINER]);
+        } else {
+            return findTargetByPathByType(creep, inRange, [STRUCTURE_STORAGE, STRUCTURE_CONTAINER]);
+        }
     },
 
     findEnergyLinkWithdrawTarget(creep) {
-        if (creep.memory.anchorId != null) {
-            let link = Game.getObjectById(creep.memory.anchorId).pos.findClosestByRange(FIND_MY_STRUCTURES, {
-                filter: (structure) => (
-                    structure.structureType == STRUCTURE_LINK
-                )
-            });
-            if (link != null && !Memory.structures[link.id].push && link.store.getUsedCapacity(RESOURCE_ENERGY) > 0) {
-                return link;
-            }
-        }
-        return null;
+        return findNearestLinkIfPush(creep, false);
     },
 
     findEnergyWithdrawTarget(creep) {
         let container = creep.pos.findClosestByPath(FIND_STRUCTURES, {
             filter: (structure) => (
-                structure.structureType == STRUCTURE_CONTAINER &&
+                (
+                    structure.structureType == STRUCTURE_LINK ||
+                    structure.structureType == STRUCTURE_CONTAINER ||
+                    structure.structureType == STRUCTURE_STORAGE
+                ) &&
                 structure.store.getUsedCapacity(RESOURCE_ENERGY) > 0
             )
         });
-        if (container == null) {
-            container = creep.pos.findClosestByPath(FIND_STRUCTURES, {
-                filter: (structure) => (
-                    structure.structureType == STRUCTURE_STORAGE &&
-                    structure.store.getUsedCapacity(RESOURCE_ENERGY) > 0
-                )
-            });
-        }
         return container;
     },
 
@@ -148,28 +142,22 @@ module.exports = {
                 structure.room.name == creep.room.name
             )
         });
-        // Only look at the nearest link to their anchor, check if it has capacity and is a push link
-        if (target == null) {
-            if (creep.memory.anchorId != null) {
-                target = Game.getObjectById(creep.memory.anchorId).pos.findClosestByPath(FIND_MY_STRUCTURES, {
-                    filter: (structure) => (
-                        structure.structureType == STRUCTURE_LINK && 
-                        structure.room.name == creep.room.name
-                    )
-                });
-                if (target != null && (!Memory.structures[target.id].push || target.store.getFreeCapacity(RESOURCE_ENERGY) == 0)) {
-                    target = null;
-                }
-            }
+        if (target != null) {
+            return target;
         }
-        if (target == null) {
-            target = creep.pos.findClosestByPath(FIND_STRUCTURES, {
-                filter: (structure) => (
-                    structure.structureType == STRUCTURE_TOWER &&
-                    structure.store.getFreeCapacity(RESOURCE_ENERGY) > 100 &&
-                    structure.room.name == creep.room.name
-                )
-            });
+        target = creep.pos.findClosestByPath(FIND_STRUCTURES, {
+            filter: (structure) => (
+                structure.structureType == STRUCTURE_TOWER &&
+                structure.store.getFreeCapacity(RESOURCE_ENERGY) > 100 &&
+                structure.room.name == creep.room.name
+            )
+        });
+        if (target != null) {
+            return target;
+        }
+        target = findNearestLinkIfPush(creep, true);
+        if (target != null) {
+            return target;
         }
         return findTargetByPathByType(creep, FIND_STRUCTURES, [STRUCTURE_SPAWN, STRUCTURE_EXTENSION]);
     },
@@ -186,6 +174,29 @@ var findTargetByPathByType = function(creep, search, structureTypes) {
         });
         if (target != null) {
             return target;
+        }
+    }
+}
+
+var findNearestLinkIfPush = function(creep, push) {
+    // Only look at the nearest link to their anchor, check if it has capacity and is a push link
+    if (creep.memory.anchorId != null) {
+        let target = Game.getObjectById(creep.memory.anchorId).pos.findClosestByPath(FIND_MY_STRUCTURES, {
+            filter: (structure) => (
+                structure.structureType == STRUCTURE_LINK && 
+                structure.room.name == creep.room.name
+            )
+        });
+        if (target != null) {
+            if (push) {
+                if (Memory.structures[target.id].push && target.store.getFreeCapacity(RESOURCE_ENERGY) > 0) {
+                    return target;
+                }
+            } else {
+                if (!Memory.structures[target.id].push && target.store.getUsedCapacity(RESOURCE_ENERGY) > 0) {
+                    return target;
+                }
+            }
         }
     }
 }

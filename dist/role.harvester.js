@@ -18,9 +18,16 @@ module.exports = {
     /** @param {Creep} creep **/
     run: function(creep) {
         if (creep.memory.anchorId == null) {
+            // Get intended room:
+            let room;
+            if (creep.claim != null) {
+                room = Game.rooms[creep.memory.claim.roomName];
+            } else {
+                room = creep.room;
+            }
             // Assign creep to a source
             targeter.assignRoundRobinAnchorTarget(
-                creep, FIND_SOURCES, (source) => true
+                creep, FIND_SOURCES, (source) => true, room
             )
         }
 
