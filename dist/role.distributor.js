@@ -7,12 +7,31 @@ module.exports = {
     /** @param {Creep} creep **/
     run: function(creep) {
         if (creep.memory.anchorId == null) {
+            // Get intended room:
+            let room;
+            if (creep.claim != null) {
+                room = Game.rooms[creep.memory.claim.roomName];
+                console.log(creep.name + ' requesting anchor from claim room:' + room);
+            } else {
+                room = creep.room;
+                console.log(creep.name + ' requesting anchor from local room:' + room);
+            }
+
             // Assign creep to a source
             targeter.assignRoundRobinAnchorTarget(
-                creep, FIND_STRUCTURES, (structure) => (
+                creep,
+                FIND_STRUCTURES,
+                (structure) => (
                     structure.structureType == STRUCTURE_STORAGE ||
-                    structure.structureType == STRUCTURE_CONTAINER
-            ));
+                    structure.structureType == STRUCTURE_CONTAINER ||
+                    (
+                        structure.structureType == STRUCTURE_LINK &&
+                        Memory.structures[structure.id].push == false
+                    )
+
+                ),
+                room
+            );
         }
 
         if(creep.store.getUsedCapacity(RESOURCE_ENERGY) == 0) {
@@ -36,6 +55,14 @@ module.exports = {
             }
             let target;
             target = targeter.findEnergyDistributeTarget(creep);
+            if (target == null) {
+                const targets = creep.room.find(FIND_MY_STRUCTURES, {
+                    filter: (structure) => structure.structureType == STRUCTURE_STORAGE
+                });
+                if (targets.length > 0) {
+                    target = targets[0];
+                }
+            }
             if (target != null) {
                 if (creep.transfer(target, RESOURCE_ENERGY) != OK) {
                     creep.moveTo(target, {visualizePathStyle: {stroke: '#ffffff'}});

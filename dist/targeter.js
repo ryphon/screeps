@@ -13,9 +13,12 @@ module.exports = {
     },
 
     assignRoundRobinAnchorTarget(creep, findType, filterFunc, room=null) {
+        console.log(creep.name + ' assigning anchor');
         if (room == null) {
             room = creep.room
+            console.log(creep.name + " choosing creep's current room");
         }
+        console.log(creep.name + '  room:' + room);
         // Assign creep an anchor object
         // Init anchors memory as needed
         if (Memory.anchors == null) {
@@ -23,7 +26,7 @@ module.exports = {
             Memory.anchors = {};
         }
         // Find valid targets
-        const targets = creep.room.find(findType, {
+        const targets = room.find(findType, {
             filter: filterFunc
         });
         // Initialize anchor memory for targets
@@ -34,6 +37,7 @@ module.exports = {
         }
         // Find least assigned anchor target
         const minTarget = targets.reduce((res, target) =>
+
             (Memory.anchors[target.id].creeps.length < Memory.anchors[res.id].creeps.length) ? target : res
         );
         // Assign creep to that target
@@ -85,7 +89,7 @@ module.exports = {
                 return target
             }
         }
-        return findTargetByPathByType(creep, FIND_STRUCTURES, [STRUCTURE_STORAGE, STRUCTURE_CONTAINER]);
+        return findTargetByPathByType(creep, FIND_STRUCTURES, [[STRUCTURE_STORAGE, STRUCTURE_CONTAINER]]);
     },
 
     findEnergyStoreTargetInRange(creep, range) {
@@ -110,9 +114,10 @@ module.exports = {
             return target;
         }
         if (creep.room.memory.roles[creep.memory.role].distribute != false) {
-            return findTargetByPathByType(creep, inRange, [STRUCTURE_SPAWN, STRUCTURE_EXTENSION, STRUCTURE_STORAGE, STRUCTURE_CONTAINER]);
+            return findTargetByPathByType(creep, inRange, [[STRUCTURE_SPAWN, STRUCTURE_EXTENSION], [STRUCTURE_STORAGE, STRUCTURE_CONTAINER]]);
         } else {
-            return findTargetByPathByType(creep, inRange, [STRUCTURE_STORAGE, STRUCTURE_CONTAINER]);
+            target = findTargetByPathByType(creep, inRange, [[STRUCTURE_STORAGE, STRUCTURE_CONTAINER]]);
+            return target;
         }
     },
 
@@ -135,7 +140,7 @@ module.exports = {
     },
 
     findEnergyDistributeTarget(creep) {
-        let target = creep.pos.findClosestByPath(FIND_STRUCTURES, {
+        let target = creep.pos.findClosestByPath(FIND_MY_STRUCTURES, {
             filter: (structure) => (
                 structure.structureType == STRUCTURE_TOWER &&
                 structure.store.getFreeCapacity(RESOURCE_ENERGY) > structure.store.getUsedCapacity(RESOURCE_ENERGY) &&
@@ -155,20 +160,16 @@ module.exports = {
         if (target != null) {
             return target;
         }
-        target = findNearestLinkIfPush(creep, true);
-        if (target != null) {
-            return target;
-        }
-        return findTargetByPathByType(creep, FIND_STRUCTURES, [STRUCTURE_SPAWN, STRUCTURE_EXTENSION]);
+        return findTargetByPathByType(creep, FIND_MY_STRUCTURES, [[STRUCTURE_SPAWN, STRUCTURE_EXTENSION]]);
     },
 }
 
-var findTargetByPathByType = function(creep, search, structureTypes) {
+var findTargetByPathByType = function(creep, search, structureTypeGroups) {
     let target;
-    for (const structureType of structureTypes) {
+    for (const structureTypes of structureTypeGroups) {
         target = creep.pos.findClosestByPath(search, {
             filter: (structure) => (
-                structure.structureType == structureType &&
+                structureTypes.includes(structure.structureType) &&
                 structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0
             )
         });
@@ -181,7 +182,7 @@ var findTargetByPathByType = function(creep, search, structureTypes) {
 var findNearestLinkIfPush = function(creep, push) {
     // Only look at the nearest link to their anchor, check if it has capacity and is a push link
     if (creep.memory.anchorId != null) {
-        let target = Game.getObjectById(creep.memory.anchorId).pos.findClosestByPath(FIND_MY_STRUCTURES, {
+        let target = Game.getObjectById(creep.memory.anchorId).pos.findClosestByRange(FIND_MY_STRUCTURES, {
             filter: (structure) => (
                 structure.structureType == STRUCTURE_LINK && 
                 structure.room.name == creep.room.name

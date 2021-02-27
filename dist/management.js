@@ -68,7 +68,7 @@ module.exports = {
     },
 
     reinforceClaim(fromRoom, roleName) {
-        console.log('Queueing ' + roleName + 'in spawnQueue at ' + fromRoom);
+        console.log('Queueing ' + roleName + ' in spawnQueue at ' + fromRoom);
         fromRoom.memory.spawnQueue.push(
                 [fromRoom.memory.roles[roleName].bodyParts[0], roleName + Game.time,  { memory: { role: roleName, claim: fromRoom.memory.claim}}]
         )
