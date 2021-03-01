@@ -17,12 +17,11 @@ module.exports = {
                 console.log(creep.name + ' requesting anchor from local room:' + room);
             }
 
-            // Assign creep to a source
+            // Assign creep to a container or pull link
             targeter.assignRoundRobinAnchorTarget(
                 creep,
                 FIND_STRUCTURES,
                 (structure) => (
-                    structure.structureType == STRUCTURE_STORAGE ||
                     structure.structureType == STRUCTURE_CONTAINER ||
                     (
                         structure.structureType == STRUCTURE_LINK &&
@@ -81,10 +80,25 @@ module.exports = {
             }
             // Next prioritize anchor container/storage
             const anchor = Game.getObjectById(creep.memory.anchorId);
-            let target = anchor;
-            if (target.store.getUsedCapacity(RESOURCE_ENERGY) == 0) {
-                // If anchor empty, find alternative
-                target = targeter.findEnergyWithdrawTarget(creep);
+            // If anchor empty, find alternative
+            let target = anchor.pos.findClosestByPath(FIND_STRUCTURES, {
+                filter: (structure) => (
+                    (
+                        structure.structureType == STRUCTURE_LINK ||
+                        structure.structureType == STRUCTURE_CONTAINER
+                    ) &&
+                    structure.store.getUsedCapacity(RESOURCE_ENERGY) > 0
+                )
+            });
+            if (target == null) {
+                target = anchor.pos.findClosestByPath(FIND_STRUCTURES, {
+                    filter: (structure) => (
+                        (
+                            structure.structureType == STRUCTURE_STORAGE
+                        ) &&
+                        structure.store.getUsedCapacity(RESOURCE_ENERGY) > 0
+                    )
+                });
             }
             // Lastly, if no alternatives, just go to anchor anyway
             if (target == null) {
@@ -96,5 +110,5 @@ module.exports = {
             }
         }
     }
-        
 };
+

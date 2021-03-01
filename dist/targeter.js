@@ -181,8 +181,17 @@ var findTargetByPathByType = function(creep, search, structureTypeGroups) {
 
 var findNearestLinkIfPush = function(creep, push) {
     // Only look at the nearest link to their anchor, check if it has capacity and is a push link
+    const anchor = Game.getObjectById(creep.memory.anchorId);
     if (creep.memory.anchorId != null) {
-        let target = Game.getObjectById(creep.memory.anchorId).pos.findClosestByRange(FIND_MY_STRUCTURES, {
+        let inRange;
+        if (Memory.rooms[creep.room.name].roles[creep.memory.role].zones == true && Memory.rooms[creep.room.name].roles[creep.memory.role].zoneRange != null) {
+            inRange = anchor.pos.findInRange(FIND_STRUCTURES, Memory.rooms[creep.room.name].roles[creep.memory.role].zoneRange, {
+                filter: (structure) => structure.structureType == STRUCTURE_LINK
+            });
+        } else {
+            inRange = FIND_MY_STRUCTURES;
+        }
+        let target = anchor.pos.findClosestByRange(inRange, {
             filter: (structure) => (
                 structure.structureType == STRUCTURE_LINK && 
                 structure.room.name == creep.room.name
