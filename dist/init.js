@@ -71,7 +71,7 @@ module.exports = {
             Memory.structures = {};
         }
         if (Memory.wallHitsGoal == null) {
-            Memory.wallHitsGoal = 50000;
+            Memory.wallHitsGoal = 2000;
         }
         Memory.initialized = true;
     }
