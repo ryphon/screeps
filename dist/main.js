@@ -1,10 +1,12 @@
 'use strict';
 
 var roleHarvester = require('role.harvester');
+var roleDistributor = require('role.distributor');
 var roleUpgrader = require('role.upgrader');
 var roleBuilder = require('role.builder');
 var roleRepairer = require('role.repairer');
 var roleDefender = require('role.defender');
+var roleClaim = require('role.claim');
 var targeter = require('targeter');
 var spawner = require('spawner');
 var failsafe = require('failsafe');
@@ -39,20 +41,28 @@ module.exports.loop = function () {
 
     // Task creeps
     for(const creep of Object.values(Game.creeps)) {
-        if(creep.memory.role == 'harvester') {
-            roleHarvester.run(creep);
-        }
-        if(creep.memory.role == 'upgrader') {
-            roleUpgrader.run(creep);
-        }
-        if(creep.memory.role == 'builder') {
-            roleBuilder.run(creep);
-        }
-        if(creep.memory.role == 'repairer') {
-            roleRepairer.run(creep);
-        }
-        if(creep.memory.role == 'defender') {
-            roleDefender.run(creep);
+        switch (creep.memory.role) {
+            case 'harvester':
+                roleHarvester.run(creep);
+                break;
+            case 'distributor':
+                roleDistributor.run(creep);
+                break;
+            case 'upgrader':
+                roleUpgrader.run(creep);
+                break;
+            case 'builder':
+                roleBuilder.run(creep);
+                break;
+            case 'repairer':
+                roleRepairer.run(creep);
+                break;
+            case 'defender':
+                roleDefender.run(creep);
+                break;
+            case 'claim':
+                roleClaim.run(creep);
+                break;
         }
     }
 }

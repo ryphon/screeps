@@ -15,17 +15,24 @@ module.exports = {
             )
         }
 
-	    if(creep.store[RESOURCE_ENERGY] == 0) {
+        if(creep.store[RESOURCE_ENERGY] == 0) {
             if (creep.memory.building) {
-                creep.say('🔄 withdraw');
+                creep.say('⛽ charge');
             }
             creep.memory.building = false;
-	    } else if(!creep.memory.building && creep.store.getFreeCapacity() == 0) {
-	        creep.memory.building = true;
-	        creep.say('🚧 build');
-	    }
+        } else if(!creep.memory.building && creep.store.getFreeCapacity() == 0) {
+            creep.memory.building = true;
+            creep.say('🚧 build');
+        }
 
-	    if(creep.memory.building) {
+        if(creep.memory.building) {
+            if (creep.memory.claim != null && creep.room.name != creep.memory.claim.roomName) {
+                // If we're claiming a new room, special short-circuit:
+                // Once they're full of energy, book it to a new room and get busy
+                creep.say('NEW ROOM!!');
+                creep.moveTo(Game.rooms[creep.memory.claim.roomName].controller, {visualizePathStyle: {stroke: '#ffff00'}});
+                return;
+            }
             var target = targeter.findBuildTarget(creep);
             if(target != null) {
                 if(creep.build(target) == ERR_NOT_IN_RANGE) {
@@ -39,11 +46,11 @@ module.exports = {
                     }
                 } else {
                     creep.say('Going home');
-                    target = Game.getObjectById(creep.anchorId);
+                    target = Game.getObjectById(creep.memory.anchorId);
                     creep.moveTo(target, {visualizePathStyle: {stroke: '#ffffff'}});
                 }
             }
-	    } else {
+        } else {
             let container = targeter.findEnergyWithdrawTarget(creep);
             if(container != null) {
                 if (creep.withdraw(container, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
@@ -55,6 +62,6 @@ module.exports = {
                     creep.moveTo(source, {visualizePathStyle: {stroke: '#ffaa00'}});
                 }
             }
-	    }
-	}
+        }
+    }
 };
